@@ -38,7 +38,7 @@ public class JarAnalyser {
                     if (!name.contains("$")) name.substring(0, name.length() - ".class".length());
                     //System.out.println("Class Name: " + name); // same as below
 
-                    // get handle on class, using the class loader
+                    // get handle on class, using the class loader, not intialising the class
                     Class cls = Class.forName(name, false, cl);
 
                     System.out.println("Class Name: " + cls.getName());
@@ -85,6 +85,10 @@ public class JarAnalyser {
 
             System.out.println("Contructor: " + c.getName());
             constructorParams = c.getParameterTypes(); //Get the parameters
+            for(Class param : constructorParams){
+
+                System.out.println("Constructor Param: " + param.getName());
+            }
         }
 
         Field[] fields = cls.getFields(); //Get the fields / attributes
