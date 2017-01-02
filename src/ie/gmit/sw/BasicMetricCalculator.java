@@ -3,65 +3,113 @@ package ie.gmit.sw;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
-import java.util.HashMap;
+import java.util.*;
 import java.util.jar.*;
 
 /**
  * Created by Ross Byrne on 02/01/17.
+ * Calculates the basic metric, stability
  */
 
-public class JarAnalyser {
+public class BasicMetricCalculator {
 
-    public JarAnalyser(String pathname){
+    private HashMap<String, BasicMetric> classMetrics = new HashMap<>();
+    private String jarPathName;
 
-        init(pathname);
+    public BasicMetricCalculator(String pathname){
 
-    }
+        // save the jar pathname
+        this.jarPathName = pathname;
 
-    public void init(String pathname){
+        // add the classes in jar to map
+        addClassNamesToMap();
+
+        // calculate the metrics for classes in map
+        calculateBasicMetric();
+
+    } // constructor
+
+    public void addClassNamesToMap(){
+
+        int i = 0;
 
         try {
 
-            File file  = new File(pathname);
+            // get handle on jar file
+            File file  = new File(jarPathName);
 
-            URL url = file.toURI().toURL();
-            URL[] urls = new URL[]{url};
+            // create inputStream for jar
+            JarInputStream in = new JarInputStream(new FileInputStream(file));
 
-            ClassLoader cl = new URLClassLoader(urls);
-
-            JarInputStream in = new JarInputStream(new FileInputStream(new File(pathname)));
+            // get jar entry
             JarEntry next = in.getNextJarEntry();
 
+            // loop through all jar entries
             while (next != null) {
+
+                // if the file in jar is a class
                 if (next.getName().endsWith(".class")) {
+
+                    // format the class name
                     String name = next.getName().replaceAll("/", "\\.");
                     name = name.replaceAll(".class", "");
                     if (!name.contains("$")) name.substring(0, name.length() - ".class".length());
-                    //System.out.println("Class Name: " + name); // same as below
+                    //System.out.println("Class Name: " + name); // print out name
 
-                    // get handle on class, using the class loader, not intialising the class
-                    Class cls = Class.forName(name, false, cl);
+                    // add class name to map with empty metric object
+                    classMetrics.put(name, new BasicMetric());
 
-                    System.out.println("Class Name: " + cls.getName());
+                    i++; // count the number of classes being loaded
 
-                    // print its details
-                    printClassDetails(cls);
-                }
+                } // if
+
+                // get next entry
                 next = in.getNextJarEntry();
 
             } // while
 
-
-        } catch (FileNotFoundException e){
-
-            System.out.println("JAR File cannot be found!");
-            e.printStackTrace();
+            System.out.println(i + " classes loaded.");
+            System.out.println("map size: " + classMetrics.size());
 
         } catch (Exception e){
 
             e.printStackTrace();
         } // try catch
-    } // init()
+
+    } // addClassNamesToMap()
+
+    public void calculateBasicMetric(){
+
+        try {
+
+            // get handle on jar file
+            File file = new File(jarPathName);
+
+            // create a url to file
+            URL url = file.toURI().toURL();
+            URL[] urls = new URL[]{url};
+
+            // create a ClassLoader to load classes from the JAR file
+            ClassLoader cl = new URLClassLoader(urls);
+
+            // loop for each key in the classMetrics map
+            for (String className : classMetrics.keySet()) {
+
+                //System.out.println(className);
+
+                // get handle on class, using the class loader, not intialising the class
+                Class cls = Class.forName(className, false, cl);
+
+                //printClassDetails(cls);
+
+            } // foreach
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+
+    } // calculateBasicMetric()
+
 
     public void printClassDetails(Class cls){
 
@@ -116,7 +164,6 @@ public class JarAnalyser {
                 System.out.println("Method Param: " + mp.getName());
             }
         }
-
 
 
     } // printClassDetails()
