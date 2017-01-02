@@ -100,7 +100,8 @@ public class BasicMetricCalculator {
                 // get handle on class, using the class loader, not intialising the class
                 Class cls = Class.forName(className, false, cl);
 
-                //printClassDetails(cls);
+                // analyse class to calculate in and out degree
+                analyseClass(cls);
 
             } // foreach
         } catch (Exception e){
@@ -109,6 +110,104 @@ public class BasicMetricCalculator {
         }
 
     } // calculateBasicMetric()
+
+    // analyses a class to calculate its in and out degree
+    // a reference to another class increments the classes out degree
+    // and increments the in degree of class being referenced
+    public void analyseClass(Class cls){
+
+        int outdegree = 0;
+
+        //Package pack = cls.getPackage(); //Get the package
+        //System.out.println("Package Name: " + pack.getName());
+
+        boolean iface = cls.isInterface(); //Is it an interface?
+        //System.out.println("Is Class an Interface?: " + iface);
+
+        Class[] interfaces = cls.getInterfaces(); //Get the set of interface it implements
+        // for each interface, print name
+        for(Class i : interfaces){
+
+            // increment outdegree
+            outdegree++;
+
+            //System.out.println("Implements Interface: " + i.getName());
+        }
+
+        Constructor[] cons = cls.getConstructors(); //Get the set of constructors
+        Class[] constructorParams;
+
+        // for each constructor, get it's parameters
+        for(Constructor c : cons){
+
+            //System.out.println("Contructor: " + c.getName());
+            constructorParams = c.getParameterTypes(); //Get the parameters
+            for(Class param : constructorParams){
+
+                if(classMetrics.containsKey(param.getName())){
+
+                    // increment outdegree
+                    outdegree++;
+
+                    // also increment indegree of that other class
+                }
+
+                //System.out.println("Constructor Param: " + param.getName());
+            }
+        }
+
+        Field[] fields = cls.getFields(); //Get the fields / attributes
+
+        for(Field f : fields){
+
+            //System.out.println("Field: " + f.getName());
+
+            if(classMetrics.containsKey(f.getName())){
+
+                // increment outdegree
+                outdegree++;
+
+                // also increment indegree of other class
+            }
+        }
+
+        Method[] methods = cls.getMethods(); //Get the set of methods
+        Class[] methodParams;
+
+        // for each method, print its return type
+        for(Method m : methods){
+
+            //System.out.println("Method: " + m.getName());
+
+            Class methodReturnType = m.getReturnType(); //Get a method return type
+            //System.out.println("Method Return Type: " + methodReturnType.getName());
+
+            if(classMetrics.containsKey(methodReturnType.getName())){
+
+                // increment outdegree
+                outdegree++;
+
+                // also increment indegree of other class
+            }
+
+            methodParams = m.getParameterTypes(); //Get method parameters
+            for(Class mp : methodParams){
+
+                //System.out.println("Method Param: " + mp.getName());
+
+                if(classMetrics.containsKey(mp.getName())){
+
+                    // increment outdegree
+                    outdegree++;
+
+                    // also increment indegree of other class
+                }
+            }
+        }
+
+        System.out.println("outdegree: " + outdegree + ". Class: " + cls.getName());
+
+    } // analyseClass()
 
 
     public void printClassDetails(Class cls){
