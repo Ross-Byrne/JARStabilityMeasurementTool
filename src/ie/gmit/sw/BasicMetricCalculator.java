@@ -27,6 +27,13 @@ public class BasicMetricCalculator {
         // calculate the metrics for classes in map
         calculateBasicMetric();
 
+        // print out outdegree for classes
+        for(BasicMetric m : classMetrics.values()){
+
+            // print out outdegrees of classes
+            System.out.println("Outdegree: " + m.getOutDegree() + ". Class: " + m.getClassName());
+        }
+
     } // constructor
 
     public void addClassNamesToMap(){
@@ -58,6 +65,9 @@ public class BasicMetricCalculator {
 
                     // add class name to map with empty metric object
                     classMetrics.put(name, new BasicMetric());
+
+                    // set the class name for metric
+                    classMetrics.get(name).setClassName(name);
 
                     i++; // count the number of classes being loaded
 
@@ -132,7 +142,7 @@ public class BasicMetricCalculator {
             outdegree++;
 
             //System.out.println("Implements Interface: " + i.getName());
-        }
+        } // foreach
 
         Constructor[] cons = cls.getConstructors(); //Get the set of constructors
         Class[] constructorParams;
@@ -150,11 +160,11 @@ public class BasicMetricCalculator {
                     outdegree++;
 
                     // also increment indegree of that other class
-                }
+                } // if
 
                 //System.out.println("Constructor Param: " + param.getName());
-            }
-        }
+            } // foreach
+        } // foreach
 
         Field[] fields = cls.getFields(); //Get the fields / attributes
 
@@ -168,8 +178,8 @@ public class BasicMetricCalculator {
                 outdegree++;
 
                 // also increment indegree of other class
-            }
-        }
+            } // if
+        } // foreach
 
         Method[] methods = cls.getMethods(); //Get the set of methods
         Class[] methodParams;
@@ -201,11 +211,14 @@ public class BasicMetricCalculator {
                     outdegree++;
 
                     // also increment indegree of other class
-                }
-            }
-        }
 
-        System.out.println("outdegree: " + outdegree + ". Class: " + cls.getName());
+                } // if
+            } // foreach
+        } // foreach
+
+       // System.out.println("outdegree: " + outdegree + ". Class: " + cls.getName());
+
+        classMetrics.get(cls.getName()).setOutDegree(outdegree);
 
     } // analyseClass()
 
