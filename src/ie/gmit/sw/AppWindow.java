@@ -65,12 +65,27 @@ public class AppWindow {
         		JFileChooser fc = new JFileChooser("./");
         		int returnVal = fc.showOpenDialog(frame);
             	if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+            	    // get handle on selected file
                 	File file = fc.getSelectedFile().getAbsoluteFile();
-                	String name = file.getAbsolutePath(); 
-                	txtFileName.setText(name);
-                	System.out.println("You selected the following file: " + name);
-            	}
-			}
+
+                	// get file name
+                	String name = file.getAbsolutePath();
+
+                	// check that the file is a .jar
+                    if(name.endsWith(".jar") == true){
+
+                        txtFileName.setText(name);
+                        System.out.println("You selected the following file: " + name);
+
+                    } else { // if file is not a .jar
+
+                        System.out.println("Not a JAR!");
+
+                    } // if
+
+            	} // if
+			} // actionPerformed()
         });
 
 		// button for doing something
