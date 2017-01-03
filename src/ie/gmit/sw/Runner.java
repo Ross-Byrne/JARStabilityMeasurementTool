@@ -10,6 +10,9 @@ public class Runner {
         //JarAnalyser jarAnalyser = new JarAnalyser("/home/rossbyrne/Downloads/OO/string-service.jar");
         BasicMetricCalculator basicMetricCalculator = new BasicMetricCalculator("/home/rossbyrne/Downloads/OO/string-service.jar");
 
+        // start the swing app window
+        new AppWindow();
+
     } // main()
 
 } // class

@@ -28,11 +28,11 @@ public class BasicMetricCalculator {
         calculateBasicMetric();
 
         // print out outdegree for classes
-        for(BasicMetric m : classMetrics.values()){
-
-            // print out outdegrees of classes
-            System.out.printf("\nOutdegree: %d. Indegree: %d. Stability: %.2f. Class: %s", m.getOutDegree(), m.getInDegree(), m.getStability(), m.getClassName());
-        }
+//        for(BasicMetric m : classMetrics.values()){
+//
+//            // print out outdegrees of classes
+//            System.out.printf("\nOutdegree: %d. Indegree: %d. Stability: %.2f. Class: %s", m.getOutDegree(), m.getInDegree(), m.getStability(), m.getClassName());
+//        }
 
     } // constructor
 

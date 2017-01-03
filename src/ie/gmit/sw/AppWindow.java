@@ -20,7 +20,7 @@ public class AppWindow {
 		
         //The file panel will contain the file chooser
         JPanel top = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        top.setBorder(new javax.swing.border.TitledBorder("Select File to Encode"));
+        top.setBorder(new javax.swing.border.TitledBorder("Select a JAR File"));
         top.setPreferredSize(new Dimension(500, 100));
         top.setMaximumSize(new Dimension(500, 100));
         top.setMinimumSize(new Dimension(500, 100));
@@ -32,7 +32,7 @@ public class AppWindow {
 		txtFileName.setMinimumSize(new Dimension(100, 30));
 		
 		JButton btnChooseFile = new JButton("Browse...");
-		btnChooseFile.setToolTipText("Select File to Encode");
+		btnChooseFile.setToolTipText("Select JAR File");
         btnChooseFile.setPreferredSize(new Dimension(90, 30));
         btnChooseFile.setMaximumSize(new Dimension(90, 30));
         btnChooseFile.setMargin(new Insets(2, 2, 2, 2));
@@ -93,7 +93,8 @@ public class AppWindow {
         btnDialog.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
             	AppSummary as =  new AppSummary(frame, true);
-            	as.show();
+            	as.setVisible(true);
+
 			}
         });
         
@@ -109,8 +110,5 @@ public class AppWindow {
         frame.getContentPane().add(bottom);       
 		frame.setVisible(true);
 	}
-	
-	public static void main(String[] args) {
-		new AppWindow();
-	}
+
 }
