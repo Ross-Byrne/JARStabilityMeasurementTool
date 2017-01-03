@@ -8,12 +8,14 @@ import java.awt.event.*;
 import java.io.File;
 
 public class AppWindow {
+
 	private JFrame frame;
 	
 	public AppWindow(){
+
 		//Create a window for the application
 		frame = new JFrame();
-		frame.setTitle("B.Sc. in Software Development - GMIT");
+		frame.setTitle("JAR Stability Measurement Tool");
 		frame.setSize(550, 500);
 		frame.setResizable(false);
 		frame.setLayout(new FlowLayout());
@@ -109,6 +111,7 @@ public class AppWindow {
 
         frame.getContentPane().add(bottom);       
 		frame.setVisible(true);
-	}
 
-}
+	} // constructor
+
+} // class

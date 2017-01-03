@@ -5,7 +5,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class AppSummary extends JDialog{
+public class AppSummary extends JDialog {
+
 	private static final long serialVersionUID = 777L;	
 	private TypeSummaryTableModel tm = null;
 	private JTable table = null;
@@ -16,14 +17,15 @@ public class AppSummary extends JDialog{
 	private Container c;
 	
 	public AppSummary(JFrame parent, boolean modal){
+
         super(parent, modal);
         super.setTitle("Summary");
         super.setResizable(true);
         
-        this.setSize(new Dimension(500, 400));
+        this.setSize(new Dimension(600, 400));
         
 		c = getContentPane();
-		c.setLayout(new FlowLayout());	
+		c.setLayout(new FlowLayout());
 
 		createTable();
         configureButtonPanel();
@@ -34,9 +36,10 @@ public class AppSummary extends JDialog{
 	
 	
 	private void createTable(){
+
 		tm = new TypeSummaryTableModel();
 		table = new JTable(tm);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setSelectionBackground(Color.YELLOW);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -46,24 +49,27 @@ public class AppSummary extends JDialog{
 			column = table.getColumnModel().getColumn(i);
 			if (i == 0){
 				column.setPreferredWidth(60);
-				column.setMaxWidth(60);
+				column.setMaxWidth(200);
 				column.setMinWidth(60);
 			}else{
 				column.setPreferredWidth(100);
-				column.setMaxWidth(100);
+				column.setMaxWidth(200);
 				column.setMinWidth(100);
-			}
-		}
+			} // if
+
+		} // for
 
 		tableScroller = new JScrollPane(table);
-		tableScroller.setPreferredSize(new Dimension(485, 235));
+		tableScroller.setPreferredSize(new Dimension(585, 235));
 		tableScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		tablePanel.add(tableScroller, FlowLayout.LEFT);
-	}
+
+	} // createTable()
 	
 	private void configureButtonPanel(){
-    	buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+
+    	buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		//Configure the Cancel button
 		btnClose = new JButton("Close");		
@@ -80,5 +86,7 @@ public class AppSummary extends JDialog{
 		});
 
 		buttonPanel.add(btnClose);
-	}
-}
+
+	} // configureButtonPanel()
+
+} // class
