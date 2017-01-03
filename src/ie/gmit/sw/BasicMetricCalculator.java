@@ -31,7 +31,7 @@ public class BasicMetricCalculator {
         for(BasicMetric m : classMetrics.values()){
 
             // print out outdegrees of classes
-            System.out.println("Outdegree: " + m.getOutDegree() + ". Class: " + m.getClassName());
+            System.out.println("Outdegree: " + m.getOutDegree() + ". Indegree: " + m.getInDegree() + ". Class: " + m.getClassName());
         }
 
     } // constructor
@@ -138,10 +138,20 @@ public class BasicMetricCalculator {
         // for each interface, print name
         for(Class i : interfaces){
 
-            // increment outdegree
-            outdegree++;
+            if(classMetrics.containsKey(i.getName())) {
 
+                // increment outdegree
+                outdegree++;
+
+                // increment indegree for interface
+                BasicMetric m = classMetrics.get(i.getName());
+                m.setInDegree(m.getInDegree() + 1);
+
+                //System.out.println("Implements Interface: " + i.getName());
+
+            } // if
             //System.out.println("Implements Interface: " + i.getName());
+
         } // foreach
 
         Constructor[] cons = cls.getConstructors(); //Get the set of constructors
@@ -159,7 +169,10 @@ public class BasicMetricCalculator {
                     // increment outdegree
                     outdegree++;
 
-                    // also increment indegree of that other class
+                    // increment indegree for other class
+                    BasicMetric m = classMetrics.get(param.getName());
+                    m.setInDegree(m.getInDegree() + 1);
+
                 } // if
 
                 //System.out.println("Constructor Param: " + param.getName());
@@ -177,7 +190,10 @@ public class BasicMetricCalculator {
                 // increment outdegree
                 outdegree++;
 
-                // also increment indegree of other class
+                // increment indegree for interface
+                BasicMetric m = classMetrics.get(f.getName());
+                m.setInDegree(m.getInDegree() + 1);
+
             } // if
         } // foreach
 
@@ -197,7 +213,9 @@ public class BasicMetricCalculator {
                 // increment outdegree
                 outdegree++;
 
-                // also increment indegree of other class
+                // increment indegree for interface
+                BasicMetric bm = classMetrics.get(methodReturnType.getName());
+                bm.setInDegree(bm.getInDegree() + 1);
             }
 
             methodParams = m.getParameterTypes(); //Get method parameters
@@ -210,7 +228,9 @@ public class BasicMetricCalculator {
                     // increment outdegree
                     outdegree++;
 
-                    // also increment indegree of other class
+                    // increment indegree for interface
+                    BasicMetric bm = classMetrics.get(mp.getName());
+                    bm.setInDegree(bm.getInDegree() + 1);
 
                 } // if
             } // foreach
