@@ -38,9 +38,20 @@ public class BasicMetric {
 
         float stability = 1f;
 
-        // calculate stability
-        stability = (getOutDegree() / (getInDegree() + getOutDegree()));
+        try {
+            if(getOutDegree() > 0) {
 
+                // calculate stability
+                stability = ((float) getOutDegree() / ((float) getInDegree() + (float) getOutDegree()));
+            } else {
+
+                stability = 0f;
+            }
+
+        } catch (Exception e){
+
+            stability = 0f;
+        }
         return stability;
 
     } // getStability()
