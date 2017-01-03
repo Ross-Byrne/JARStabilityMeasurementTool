@@ -61,9 +61,12 @@ public class AppWindow {
         btnChooseFile.setMargin(new Insets(4, 2, 2, 2));
         btnChooseFile.setMinimumSize(new Dimension(90, 30));
 		btnChooseFile.addActionListener(new ActionListener() {
+
             public void actionPerformed(ActionEvent evt) {
+
         		JFileChooser fc = new JFileChooser("./");
         		int returnVal = fc.showOpenDialog(frame);
+
             	if (returnVal == JFileChooser.APPROVE_OPTION) {
 
             	    // get handle on selected file
@@ -80,7 +83,11 @@ public class AppWindow {
 
                     } else { // if file is not a .jar
 
-                        System.out.println("Not a JAR!");
+                        // create an error dialog box
+                        ErrorDialog errorDialog = new ErrorDialog("Error! Selected File is Not a .jar!");
+
+                        // show the dialog
+                        errorDialog.setVisible(true);
 
                     } // if
 
