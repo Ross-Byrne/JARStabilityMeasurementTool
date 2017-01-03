@@ -100,17 +100,18 @@ public class AppWindow {
 
         //A separate panel for the programme output
         JPanel mid = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        mid.setBorder(new BevelBorder(BevelBorder.RAISED));
+        mid.setBorder(new javax.swing.border.TitledBorder("Weird Custom Control"));
+        //mid.setBorder(new BevelBorder(BevelBorder.RAISED));
         mid.setPreferredSize(new Dimension(560, 250));
         mid.setMaximumSize(new Dimension(560, 250));
         mid.setMinimumSize(new Dimension(560, 250));
 
         // custom control
-        CustomControl cc = new CustomControl(new Dimension(540, 230));
+        CustomControl cc = new CustomControl(new Dimension(540, 220));
         cc.setBackground(Color.WHITE);
-        cc.setPreferredSize(new Dimension(300, 230));
-        cc.setMaximumSize(new Dimension(300, 230));
-        cc.setMinimumSize(new Dimension(300, 230));
+        cc.setPreferredSize(new Dimension(300, 220));
+        cc.setMaximumSize(new Dimension(300, 220));
+        cc.setMinimumSize(new Dimension(300, 220));
         mid.add(cc);
 		frame.getContentPane().add(mid);
 
