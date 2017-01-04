@@ -10,6 +10,7 @@ import java.io.File;
 public class AppWindow {
 
 	private JFrame frame;
+	private JButton btnOther;
 	
 	public AppWindow(){
 
@@ -52,6 +53,7 @@ public class AppWindow {
 		txtFileName.setMaximumSize(new Dimension(400, 30));
 		txtFileName.setMargin(new Insets(4, 2, 2, 2));
 		txtFileName.setMinimumSize(new Dimension(100, 30));
+		txtFileName.setEditable(false);
 
 		// create button for choosing jar file
 		JButton btnChooseFile = new JButton("Browse...");
@@ -78,8 +80,15 @@ public class AppWindow {
                 	// check that the file is a .jar
                     if(name.endsWith(".jar") == true){
 
+                        // add file path to text field
                         txtFileName.setText(name);
-                        System.out.println("You selected the following file: " + name);
+
+                        // make readonly
+                       // txtFileName.setEditable(false);
+
+                        // activate do something button
+                        btnOther.setEnabled(true);
+
 
                     } else { // if file is not a .jar
 
@@ -96,15 +105,27 @@ public class AppWindow {
         });
 
 		// button for doing something
-		JButton btnOther = new JButton("Do Something");
+		btnOther = new JButton("Do Something");
 		btnOther.setToolTipText("Do Something");
 		btnOther.setPreferredSize(new Dimension(150, 30));
 		btnOther.setMaximumSize(new Dimension(150, 30));
 		btnOther.setMargin(new Insets(4, 2, 2, 2));
 		btnOther.setMinimumSize(new Dimension(150, 30));
+		btnOther.setEnabled(false);
+
 		btnOther.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-            	System.out.println("Do Something");
+
+                // check if their is something entered in the filepath
+            	if(txtFileName.getText().length() > 1){
+
+                    // analyse JAR
+                    BasicMetricCalculator basicMetricCalculator = new BasicMetricCalculator(txtFileName.getText());
+
+                } else {
+
+                    System.out.println("No");
+                }
             	
 			}
         });
