@@ -36,6 +36,31 @@ public class BasicMetricCalculator {
 
     } // constructor
 
+    public Object[][] getMetricData(){
+
+        int i = 0;
+        Object[][] data = new Object[classMetrics.size()][4];
+
+        // order of data for cols
+        // cols = {"Stability", "Out Degree", "In Degree", "Class"};
+
+        // for each metric object in the map
+        for(BasicMetric m : classMetrics.values()){
+
+            // add data to the 2d array
+            data[i][0] = m.getStability();  // set stability
+            data[i][1] = m.getOutDegree();  // set outDegree
+            data[i][2] = m.getInDegree();   // set inDegree
+            data[i][3] = m.getClassName();  // set class name
+
+            // increment counter
+            i++;
+        } // for
+
+        return data;
+
+    } // getMetricData()
+
     public void addClassNamesToMap(){
 
         int i = 0;

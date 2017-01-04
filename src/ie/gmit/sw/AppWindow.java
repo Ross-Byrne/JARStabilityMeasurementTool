@@ -6,11 +6,13 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.util.HashMap;
 
 public class AppWindow {
 
 	private JFrame frame;
 	private JButton btnOther;
+	private AppSummary as;
 	
 	public AppWindow(){
 
@@ -122,10 +124,22 @@ public class AppWindow {
                     // analyse JAR
                     BasicMetricCalculator basicMetricCalculator = new BasicMetricCalculator(txtFileName.getText());
 
+                    // create the summary
+                    as =  new AppSummary(frame, true);
+
+                    // get handle on summary table model
+                    TypeSummaryTableModel tm = as.getTableModel();
+
+                    // add metric data into table model
+                    tm.setTableData(basicMetricCalculator.getMetricData());
+
+                    // make the dialog visible
+                    as.setVisible(true);
+
                 } else {
 
-                    System.out.println("No");
-                }
+                    System.out.println("No jar selected");
+                } // if
             	
 			}
         });
@@ -168,7 +182,9 @@ public class AppWindow {
         JButton btnDialog = new JButton("Show Dialog"); //Create Quit button
         btnDialog.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-            	AppSummary as =  new AppSummary(frame, true);
+
+                // create the summary
+                as =  new AppSummary(frame, true);
             	as.setVisible(true);
 
 			}

@@ -23,6 +23,12 @@ public class TypeSummaryTableModel extends AbstractTableModel {
 
     }
 
+    public void setTableData(Object[][] data){
+
+	    this.data = data;
+
+    } // setTableData()
+
 	public int getColumnCount() {
         return cols.length;
     }

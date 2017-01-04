@@ -34,14 +34,17 @@ public class AppSummary extends JDialog {
         c.add(buttonPanel);
 	}
 	
-	
+	public TypeSummaryTableModel getTableModel(){
+
+	    return tm;
+    } // getTableModel()
+
 	private void createTable(){
 
 		tm = new TypeSummaryTableModel();
 		table = new JTable(tm);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setSelectionBackground(Color.YELLOW);
-
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		TableColumn column = null;
