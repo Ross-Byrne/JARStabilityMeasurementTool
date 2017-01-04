@@ -28,7 +28,7 @@ public class AppSummary extends JDialog {
 		c.setLayout(new FlowLayout());
 
 		createTable();
-        configureButtonPanel();
+        configureButton();
         
         c.add(tablePanel);
         c.add(buttonPanel);
@@ -71,7 +71,7 @@ public class AppSummary extends JDialog {
 
 	} // createTable()
 	
-	private void configureButtonPanel(){
+	private void configureButton(){
 
     	buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -91,6 +91,6 @@ public class AppSummary extends JDialog {
 
 		buttonPanel.add(btnClose);
 
-	} // configureButtonPanel()
+	} // configureButton()
 
 } // class
