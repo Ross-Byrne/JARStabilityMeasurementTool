@@ -1,17 +1,15 @@
 package ie.gmit.sw;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.util.HashMap;
 
 public class AppWindow {
 
 	private JFrame frame;
-	private JButton btnOther;
+	private JButton btnAnalyseJAR;
 	private AppSummary as;
 	
 	public AppWindow(){
@@ -89,7 +87,7 @@ public class AppWindow {
                        // txtFileName.setEditable(false);
 
                         // activate do something button
-                        btnOther.setEnabled(true);
+                        btnAnalyseJAR.setEnabled(true);
 
 
                     } else { // if file is not a .jar
@@ -107,15 +105,15 @@ public class AppWindow {
         });
 
 		// button for doing something
-		btnOther = new JButton("Do Something");
-		btnOther.setToolTipText("Do Something");
-		btnOther.setPreferredSize(new Dimension(150, 30));
-		btnOther.setMaximumSize(new Dimension(150, 30));
-		btnOther.setMargin(new Insets(4, 2, 2, 2));
-		btnOther.setMinimumSize(new Dimension(150, 30));
-		btnOther.setEnabled(false);
+		btnAnalyseJAR = new JButton("Analyse JAR");
+		btnAnalyseJAR.setToolTipText("Analyse the selected JAR");
+		btnAnalyseJAR.setPreferredSize(new Dimension(150, 30));
+		btnAnalyseJAR.setMaximumSize(new Dimension(150, 30));
+		btnAnalyseJAR.setMargin(new Insets(4, 2, 2, 2));
+		btnAnalyseJAR.setMinimumSize(new Dimension(150, 30));
+		btnAnalyseJAR.setEnabled(false);
 
-		btnOther.addActionListener(new ActionListener() {
+		btnAnalyseJAR.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
 
                 // check if their is something entered in the filepath
@@ -148,7 +146,7 @@ public class AppWindow {
         fileNamePanel.add(filePathLabel);
         fileNamePanel.add(txtFileName);
         buttonsPanel.add(btnChooseFile);
-        buttonsPanel.add(btnOther);
+        buttonsPanel.add(btnAnalyseJAR);
 
         // add panels to top panel
         top.add(fileNamePanel);
