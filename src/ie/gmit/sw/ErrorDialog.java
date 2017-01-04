@@ -101,11 +101,12 @@ public class ErrorDialog extends JDialog {
 
         //Configure the ok button
         btnClose = new JButton("OK");
+        btnClose.setVerticalAlignment(SwingConstants.BOTTOM);
         btnClose.setToolTipText("Close this Window");
-        btnClose.setPreferredSize(new Dimension(100, 40));
-        btnClose.setMaximumSize(new Dimension(100, 40));
+        btnClose.setPreferredSize(new Dimension(100, 30));
+        btnClose.setMaximumSize(new Dimension(100, 30));
         btnClose.setMargin(new Insets(2, 2, 2, 2));
-        btnClose.setMinimumSize(new Dimension(100, 40));
+        btnClose.setMinimumSize(new Dimension(100, 30));
         btnClose.setIcon(new ImageIcon("images/close.gif"));
 
         btnClose.addActionListener(new ActionListener() {
