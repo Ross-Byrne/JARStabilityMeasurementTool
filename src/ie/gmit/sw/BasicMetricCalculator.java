@@ -16,6 +16,12 @@ public class BasicMetricCalculator {
     private HashMap<String, BasicMetric> classMetrics = new HashMap<>();
     private String jarPathName;
 
+    /**
+     * Constructor for the class. Calculates stability for selected jar
+     *
+     * @param pathname
+     * The file path to a .jar file as a String.
+     */
     public BasicMetricCalculator(String pathname){
 
         // save the jar pathname
@@ -36,6 +42,13 @@ public class BasicMetricCalculator {
 
     } // constructor
 
+    /**
+     * Gets the metrics in the format of a 2 dimensional array.
+     * This is for updating the model of the summary dialog table.
+     *
+     * @return
+     * Returns the metrics in a 2 dimensional array, for the format required for the table of a swing component.
+     */
     public Object[][] getMetricData(){
 
         int i = 0;
@@ -61,7 +74,10 @@ public class BasicMetricCalculator {
 
     } // getMetricData()
 
-    public void addClassNamesToMap(){
+    /**
+     * Addeds the class names to the map with the metrics
+     */
+    private void addClassNamesToMap(){
 
         int i = 0;
 
@@ -113,7 +129,10 @@ public class BasicMetricCalculator {
 
     } // addClassNamesToMap()
 
-    public void calculateBasicMetric(){
+    /**
+     * Handles the calculation of in and our degrees for each class
+     */
+    private void calculateBasicMetric(){
 
         try {
 
@@ -146,10 +165,17 @@ public class BasicMetricCalculator {
 
     } // calculateBasicMetric()
 
-    // analyses a class to calculate its in and out degree
-    // a reference to another class increments the classes out degree
-    // and increments the in degree of class being referenced
-    public void analyseClass(Class cls){
+
+
+    /**
+     * analyses a class to calculate its in and out degree
+     * a reference to another class increments the classes out degree
+     * and increments the in degree of class being referenced
+     *
+     * @param cls
+     * The class being analysed.
+     */
+    private void analyseClass(Class cls){
 
         int outdegree = 0;
 
@@ -266,63 +292,5 @@ public class BasicMetricCalculator {
         classMetrics.get(cls.getName()).setOutDegree(outdegree);
 
     } // analyseClass()
-
-
-    public void printClassDetails(Class cls){
-
-        Package pack = cls.getPackage(); //Get the package
-        System.out.println("Package Name: " + pack.getName());
-
-        boolean iface = cls.isInterface(); //Is it an interface?
-        System.out.println("Is Class an Interface?: " + iface);
-
-        Class[] interfaces = cls.getInterfaces(); //Get the set of interface it implements
-        // for each interface, print name
-        for(Class i : interfaces){
-
-            System.out.println("Implements Interface: " + i.getName());
-        }
-
-        Constructor[] cons = cls.getConstructors(); //Get the set of constructors
-        Class[] constructorParams;
-
-        // for each constructor, get it's parameters
-        for(Constructor c : cons){
-
-            System.out.println("Contructor: " + c.getName());
-            constructorParams = c.getParameterTypes(); //Get the parameters
-            for(Class param : constructorParams){
-
-                System.out.println("Constructor Param: " + param.getName());
-            }
-        }
-
-        Field[] fields = cls.getFields(); //Get the fields / attributes
-
-        for(Field f : fields){
-
-            System.out.println("Field: " + f.getName());
-        }
-
-        Method[] methods = cls.getMethods(); //Get the set of methods
-        Class[] methodParams;
-
-        // for each method, print its return type
-        for(Method m : methods){
-
-            System.out.println("Method: " + m.getName());
-
-            Class methodReturnType = m.getReturnType(); //Get a method return type
-            System.out.println("Method Return Type: " + methodReturnType.getName());
-
-            methodParams = m.getParameterTypes(); //Get method parameters
-            for(Class mp : methodParams){
-
-                System.out.println("Method Param: " + mp.getName());
-            }
-        }
-
-
-    } // printClassDetails()
 
 } // class

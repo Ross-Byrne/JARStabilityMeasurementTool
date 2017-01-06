@@ -47,6 +47,7 @@ public class BasicMetric {
 
     /**
      * Sets the inDegree for the class this metric represents.
+     *
      * @param inDegree
      * The in degree of the class, which is the number of classes that
      * depend on this class.
@@ -69,6 +70,7 @@ public class BasicMetric {
 
     /**
      * Sets the outDegree for the class this metric represents.
+     *
      * @param outDegree
      * The out degree of the class, which is the number of
      * classes this class depends on.
