@@ -6,12 +6,18 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
+/**
+ * The main Swing application window
+ */
 public class AppWindow {
 
 	private JFrame frame;
 	private JButton btnAnalyseJAR;
 	private AppSummary as;
-	
+
+    /**
+     * Creates and sets up the main swing GUI
+     */
 	public AppWindow(){
 
 		//Create a window for the application
