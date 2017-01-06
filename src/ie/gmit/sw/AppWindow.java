@@ -110,20 +110,41 @@ public class AppWindow {
 			} // actionPerformed()
         });
 
-		// button for doing something
-		btnAnalyseJAR = new JButton("Analyse JAR");
-		btnAnalyseJAR.setToolTipText("Analyse the selected JAR");
-		btnAnalyseJAR.setPreferredSize(new Dimension(150, 30));
-		btnAnalyseJAR.setMaximumSize(new Dimension(150, 30));
-		btnAnalyseJAR.setMargin(new Insets(4, 2, 2, 2));
-		btnAnalyseJAR.setMinimumSize(new Dimension(150, 30));
-		btnAnalyseJAR.setEnabled(false);
 
-		btnAnalyseJAR.addActionListener(new ActionListener() {
+
+        // add components to JPanel
+        fileNamePanel.add(filePathLabel);
+        fileNamePanel.add(txtFileName);
+        buttonsPanel.add(btnChooseFile);
+        //buttonsPanel.add(btnAnalyseJAR);
+
+        // add panels to top panel
+        top.add(fileNamePanel);
+        top.add(buttonsPanel);
+        frame.getContentPane().add(top); //Add the panel to the window
+
+        //A panel for the middle of the application window
+        JPanel mid = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        mid.setBorder(new javax.swing.border.TitledBorder("Options"));
+        //mid.setBorder(new BevelBorder(BevelBorder.RAISED));
+        mid.setPreferredSize(new Dimension(560, 250));
+        mid.setMaximumSize(new Dimension(560, 250));
+        mid.setMinimumSize(new Dimension(560, 250));
+
+        // button for analysing the jar
+        btnAnalyseJAR = new JButton("Analyse JAR");
+        btnAnalyseJAR.setToolTipText("Analyse the selected JAR");
+        btnAnalyseJAR.setPreferredSize(new Dimension(150, 30));
+        btnAnalyseJAR.setMaximumSize(new Dimension(150, 30));
+        btnAnalyseJAR.setMargin(new Insets(4, 2, 2, 2));
+        btnAnalyseJAR.setMinimumSize(new Dimension(150, 30));
+        btnAnalyseJAR.setEnabled(false);
+
+        btnAnalyseJAR.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
 
                 // check if their is something entered in the filepath
-            	if(txtFileName.getText().length() > 1){
+                if(txtFileName.getText().length() > 1){
 
                     // analyse JAR
                     BasicMetricCalculator basicMetricCalculator = new BasicMetricCalculator(txtFileName.getText());
@@ -144,37 +165,24 @@ public class AppWindow {
 
                     System.out.println("No jar selected");
                 } // if
-            	
-			}
-        });
 
-        // add components to JPanel
-        fileNamePanel.add(filePathLabel);
-        fileNamePanel.add(txtFileName);
-        buttonsPanel.add(btnChooseFile);
-        buttonsPanel.add(btnAnalyseJAR);
+            }
+        }); // actionListener()
 
-        // add panels to top panel
-        top.add(fileNamePanel);
-        top.add(buttonsPanel);
-        frame.getContentPane().add(top); //Add the panel to the window
+        mid.add(btnAnalyseJAR);
 
-        //A separate panel for the programme output
-        JPanel mid = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        mid.setBorder(new javax.swing.border.TitledBorder("Weird Custom Control"));
-        //mid.setBorder(new BevelBorder(BevelBorder.RAISED));
-        mid.setPreferredSize(new Dimension(560, 250));
-        mid.setMaximumSize(new Dimension(560, 250));
-        mid.setMinimumSize(new Dimension(560, 250));
+        frame.getContentPane().add(mid);
 
         // custom control
-        CustomControl cc = new CustomControl(new Dimension(540, 220));
-        cc.setBackground(Color.WHITE);
-        cc.setPreferredSize(new Dimension(300, 220));
-        cc.setMaximumSize(new Dimension(300, 220));
-        cc.setMinimumSize(new Dimension(300, 220));
-        mid.add(cc);
-		frame.getContentPane().add(mid);
+//        CustomControl cc = new CustomControl(new Dimension(540, 220));
+//        cc.setBackground(Color.WHITE);
+//        cc.setPreferredSize(new Dimension(300, 220));
+//        cc.setMaximumSize(new Dimension(300, 220));
+//        cc.setMinimumSize(new Dimension(300, 220));
+//        mid.add(cc);
+//		frame.getContentPane().add(mid);
+
+
 
 		// add panel to bottom of window
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
