@@ -13,6 +13,8 @@ public class AppWindow {
 
 	private JFrame frame;
 	private JButton btnAnalyseJAR;
+	private JRadioButton btnBetterAnalysis;
+	private JRadioButton btnBasicAnalysis;
 	private AppSummary as;
 
     /**
@@ -111,7 +113,6 @@ public class AppWindow {
         });
 
 
-
         // add components to JPanel
         fileNamePanel.add(filePathLabel);
         fileNamePanel.add(txtFileName);
@@ -124,12 +125,29 @@ public class AppWindow {
         frame.getContentPane().add(top); //Add the panel to the window
 
         //A panel for the middle of the application window
-        JPanel mid = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel mid = new JPanel(new FlowLayout(FlowLayout.LEADING));
         mid.setBorder(new javax.swing.border.TitledBorder("Options"));
         //mid.setBorder(new BevelBorder(BevelBorder.RAISED));
         mid.setPreferredSize(new Dimension(560, 250));
         mid.setMaximumSize(new Dimension(560, 250));
         mid.setMinimumSize(new Dimension(560, 250));
+
+        // radio buttons to pick the type of analyses
+        btnBasicAnalysis = new JRadioButton("Basic Analysis");
+        btnBasicAnalysis.setMnemonic(KeyEvent.VK_B);
+        btnBasicAnalysis.setSelected(false);
+
+        btnBetterAnalysis = new JRadioButton("Better Analysis");
+        btnBetterAnalysis.setMnemonic(KeyEvent.VK_C);
+        btnBetterAnalysis.setSelected(true);
+
+        //Group the radio buttons.
+        ButtonGroup group = new ButtonGroup();
+        group.add(btnBasicAnalysis);
+        group.add(btnBetterAnalysis);
+
+        mid.add(btnBasicAnalysis);
+        mid.add(btnBetterAnalysis);
 
         // button for analysing the jar
         btnAnalyseJAR = new JButton("Analyse JAR");
@@ -145,6 +163,9 @@ public class AppWindow {
 
                 // check if their is something entered in the filepath
                 if(txtFileName.getText().length() > 1){
+
+                    // check which radio button is selected
+                    System.out.println(group.isSelected(btnBetterAnalysis.getModel()));
 
                     // analyse JAR
                     BasicMetricCalculator basicMetricCalculator = new BasicMetricCalculator(txtFileName.getText());
@@ -169,8 +190,10 @@ public class AppWindow {
             }
         }); // actionListener()
 
+        // add the analyse button to the mid panel
         mid.add(btnAnalyseJAR);
 
+        // add mid panel to the main app window
         frame.getContentPane().add(mid);
 
         // custom control
@@ -181,7 +204,6 @@ public class AppWindow {
 //        cc.setMinimumSize(new Dimension(300, 220));
 //        mid.add(cc);
 //		frame.getContentPane().add(mid);
-
 
 
 		// add panel to bottom of window
