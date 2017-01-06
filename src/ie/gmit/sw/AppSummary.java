@@ -5,6 +5,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+/**
+ * A Dialog popup with a table to display the results of
+ * the stability calculation
+ */
 public class AppSummary extends JDialog {
 
 	private static final long serialVersionUID = 777L;	
@@ -33,12 +37,22 @@ public class AppSummary extends JDialog {
         c.add(tablePanel);
         c.add(buttonPanel);
 	}
-	
+
+
+    /**
+     * Method to get the table model from the table in the dialog window
+     *
+     * @return
+     * The TypeSummaryTableModel, which is the model for the table in the dialog window
+     */
 	public TypeSummaryTableModel getTableModel(){
 
 	    return tm;
     } // getTableModel()
 
+    /**
+     * Sets up the table in the dialog window
+     */
 	private void createTable(){
 
 		tm = new TypeSummaryTableModel();
@@ -70,7 +84,10 @@ public class AppSummary extends JDialog {
 		tablePanel.add(tableScroller, FlowLayout.LEFT);
 
 	} // createTable()
-	
+
+    /**
+     * Configures the button on the dialog window
+     */
 	private void configureButton(){
 
     	buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
