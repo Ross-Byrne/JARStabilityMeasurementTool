@@ -168,7 +168,8 @@ public class AppWindow {
                     System.out.println(group.isSelected(btnBetterAnalysis.getModel()));
 
                     // analyse JAR
-                    BasicMetricCalculator basicMetricCalculator = new BasicMetricCalculator(txtFileName.getText());
+                    //BasicMetricCalculator metricCalculator = new BasicMetricCalculator(txtFileName.getText());
+                    MetricCalculator metricCalculator = new MetricCalculator(txtFileName.getText());
 
                     // create the summary
                     as =  new AppSummary(frame, true);
@@ -177,7 +178,7 @@ public class AppWindow {
                     TypeSummaryTableModel tm = as.getTableModel();
 
                     // add metric data into table model
-                    tm.setTableData(basicMetricCalculator.getMetricData());
+                    tm.setTableData(metricCalculator.getMetricData());
 
                     // make the dialog visible
                     as.setVisible(true);

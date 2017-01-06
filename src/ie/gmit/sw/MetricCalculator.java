@@ -28,11 +28,11 @@ public class MetricCalculator {
         // save the jar pathname
         this.jarPathName = pathname;
 
-        // add the classes in jar to map
-        addClassNamesToMap();
+        // add the classes in jar to adjacency list
+        populateAdjacencyList();
 
         // calculate the metrics for classes in map
-        calculateBasicMetric();
+        //calculateBasicMetric();
 
         // print out outdegree for classes
 //        for(BasicMetric m : classMetrics.values()){
@@ -75,14 +75,111 @@ public class MetricCalculator {
 
     } // getMetricData()
 
-    // read each class and add them to the adjacency list
+    //
+
+    /**
+     * Gets each class from the JAR and adds them to the adjacency list.
+     * It does this using a classLoader that is pointed at the JAR file.
+     */
+    private void populateAdjacencyList(){
+
+        int i = 0;
+
+        try {
+
+            // get handle on jar file
+            File file  = new File(jarPathName);
+
+            // create inputStream for jar
+            JarInputStream in = new JarInputStream(new FileInputStream(file));
+
+            // get jar entry
+            JarEntry next = in.getNextJarEntry();
+
+            Class cls = null;
+
+            // loop through all jar entries
+            while (next != null) {
+
+                // if the file in jar is a class
+                if (next.getName().endsWith(".class")) {
+
+                    // format the class name
+                    String name = next.getName().replaceAll("/", "\\.");
+                    name = name.replaceAll(".class", "");
+                    if (!name.contains("$")) name.substring(0, name.length() - ".class".length());
+                    //System.out.println("Class Name: " + name); // print out name
+
+                    // get class from jar
+                    cls = getClassFromJar(name);
+
+                    // add class name to map with empty list of classes
+                    classAdjancencyList.put(cls, new ArrayList<>());
+
+                    // get list of classes that this class depends on
+
+
+                    i++; // count the number of classes being loaded
+
+                } // if
+
+                // get next entry
+                next = in.getNextJarEntry();
+
+            } // while
+
+            System.out.println(i + " classes loaded.");
+            System.out.println("map size: " + classMetrics.size());
+
+        } catch (Exception e){
+
+            e.printStackTrace();
+        } // try catch
+
+    } // populateAdjacencyList()
 
     // get list all of the classes that a class depends on
 
     // calculate the positional stability of each class
 
     /**
-     * Addeds the class names to the map with the metrics
+     * Gets the class, using a classLoader, from the jar file.
+     *
+     * @param name
+     * The name of the class as a String.
+     *
+     * @return
+     * Returns the class loaded from the classLoader as Class object.
+     */
+    private Class getClassFromJar(String name){
+
+        Class cls = null;
+
+        try {
+            // get handle on jar file
+            File file = new File(jarPathName);
+
+            // create a url to file
+            URL url = file.toURI().toURL();
+            URL[] urls = new URL[]{url};
+
+            // create a ClassLoader to load classes from the JAR file
+            ClassLoader cl = new URLClassLoader(urls);
+
+            // get handle on class, using the class loader, not initialising the class
+            cls = Class.forName(name, false, cl);
+
+        } catch(Exception e){
+
+            e.printStackTrace();
+        } // try
+
+        return cls;
+
+    } // getClassFromJar()
+
+    /**
+     * Adds the class names to the map with the metrics
      */
     private void addClassNamesToMap(){
 
@@ -99,6 +196,13 @@ public class MetricCalculator {
             // get jar entry
             JarEntry next = in.getNextJarEntry();
 
+            // create a url to file
+            URL url = file.toURI().toURL();
+            URL[] urls = new URL[]{url};
+
+            // create a ClassLoader to load classes from the JAR file
+            ClassLoader cl = new URLClassLoader(urls);
+
             // loop through all jar entries
             while (next != null) {
 
@@ -110,6 +214,9 @@ public class MetricCalculator {
                     name = name.replaceAll(".class", "");
                     if (!name.contains("$")) name.substring(0, name.length() - ".class".length());
                     //System.out.println("Class Name: " + name); // print out name
+
+                    // get handle on class, using the class loader, not initialising the class
+                    Class cls = Class.forName(name, false, cl);
 
                     // add class name to map with empty metric object
                     classMetrics.put(name, new BasicMetric());
