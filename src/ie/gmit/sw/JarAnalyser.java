@@ -8,10 +8,16 @@ import java.util.jar.*;
 
 /**
  * Created by Ross Byrne on 02/01/17.
+ * Analyses a selected jar.
  */
-
 public class JarAnalyser {
 
+    /**
+     * Creates the analyser, setting the selected jars path.
+     *
+     * @param pathname
+     * The path to the selected .jar file, as a String.
+     */
     public JarAnalyser(String pathname){
 
         init(pathname);

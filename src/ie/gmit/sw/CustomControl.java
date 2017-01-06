@@ -3,20 +3,26 @@ package ie.gmit.sw;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
+
+/**
+ * A Custom swing GUI control.
+ */
 public class CustomControl extends JComponent implements MouseMotionListener, ActionListener{
+
 	private static final long serialVersionUID = 777L;
 	private static final int MAX_POINTS = 50;
 	private Deque<Point> points = new LinkedList<Point>();
 	
 
 	public CustomControl(Dimension size) {
+
 		super();
 		setSize(size.width, size.height);
 		enableInputMethods(true);   
 		addMouseMotionListener(this);
 		setFocusable(true);
+
 	}
 
 	public Dimension getPreferredSize() {
@@ -46,6 +52,7 @@ public class CustomControl extends JComponent implements MouseMotionListener, Ac
 
 	
 	public void mouseMoved(MouseEvent e) {
+
 		if (points.size() == MAX_POINTS) points.removeFirst();
 		points.add(new Point(e.getX(), e.getY()));
 	}
@@ -58,7 +65,9 @@ public class CustomControl extends JComponent implements MouseMotionListener, Ac
 
 	}
 
+	// inner private class
 	private class Point{
+
 		private static final int POINT_WIDTH = 7;
 		private static final int POINT_HEIGHT = 7;
 		private int x;
@@ -76,5 +85,7 @@ public class CustomControl extends JComponent implements MouseMotionListener, Ac
 		public int getY() {
 			return y;
 		}
-	}
-}
+
+	} // class
+
+} // class

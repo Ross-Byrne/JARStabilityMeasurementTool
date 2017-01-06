@@ -7,7 +7,7 @@ import java.awt.event.*;
 /**
  * Created by Ross Byrne on 03/01/17.
  *
- * A dialog pop up for displaying an error message
+ * A dialog pop up for displaying an error message.
  */
 public class ErrorDialog extends JDialog {
 
@@ -18,6 +18,12 @@ public class ErrorDialog extends JDialog {
     private JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     private Container c;
 
+    /**
+     * The constructor creates the dialog window and adds the error message to it.
+     *
+     * @param errorMessage
+     * The error message to be displayed on the dialog window, as a String.
+     */
     public ErrorDialog(String errorMessage){
 
         // set the dialog title
@@ -33,7 +39,9 @@ public class ErrorDialog extends JDialog {
 
     /**
      * Initialises the error dialog window
+     *
      * @param errorMessage
+     * The message being added to the error dialog, as a String.
      */
     private void init(String errorMessage){
 
@@ -60,7 +68,7 @@ public class ErrorDialog extends JDialog {
     } // init()
 
     /**
-     * Sets up the panels in the dialog window
+     * Sets up the panels in the dialog window.
      */
     private void setupPanels(){
 
@@ -77,8 +85,10 @@ public class ErrorDialog extends JDialog {
     } // setupPanels()
 
     /**
-     * Creates the label with the error message
+     * Creates the label with the error message.
+     *
      * @param errorMessage
+     * The message that in on the dialog window, as a String.
      */
     private void createLabel(String errorMessage){
 
@@ -95,7 +105,7 @@ public class ErrorDialog extends JDialog {
     } // createTable()
 
     /**
-     * configures the OK close button for the dialog
+     * Configures the OK close button for the dialog.
      */
     private void configureButton(){
 

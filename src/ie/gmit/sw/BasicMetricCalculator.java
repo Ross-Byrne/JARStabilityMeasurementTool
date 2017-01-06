@@ -165,8 +165,6 @@ public class BasicMetricCalculator {
 
     } // calculateBasicMetric()
 
-
-
     /**
      * analyses a class to calculate its in and out degree
      * a reference to another class increments the classes out degree
