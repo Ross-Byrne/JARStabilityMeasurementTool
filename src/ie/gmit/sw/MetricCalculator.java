@@ -28,18 +28,8 @@ public class MetricCalculator {
         // save the jar pathname
         this.jarPathName = pathname;
 
-        // add the classes in jar to adjacency list
-        populateAdjacencyList();
-
-        // calculate the metrics for classes in map
-        //calculateBasicMetric();
-
-        // print out outdegree for classes
-//        for(BasicMetric m : classMetrics.values()){
-//
-//            // print out outdegrees of classes
-//            System.out.printf("\nOutdegree: %d. Indegree: %d. Stability: %.2f. Class: %s", m.getOutDegree(), m.getInDegree(), m.getStability(), m.getClassName());
-//        }
+        // process the classes in the jar
+        processClassesInJAR();
 
     } // constructor
 
@@ -75,7 +65,21 @@ public class MetricCalculator {
 
     } // getMetricData()
 
-    //
+    /**
+     * Processes the classes in the jar by,
+     * Adding the classes to the adjacency list
+     * and then getting the dependencies classes for that class
+     * and adding that list to the adjacency list.
+     */
+    private void processClassesInJAR(){
+
+        // populate the adjacency list with the list of classes in the jar
+        populateAdjacencyList();
+
+        // add the dependencies for each class in the adjacency list
+        addDependenciesToList();
+
+    } // processClassesInJAR()
 
     /**
      * Gets each class from the JAR and adds them to the adjacency list.
@@ -116,9 +120,6 @@ public class MetricCalculator {
                     // add class name to map with empty list of classes
                     classAdjancencyList.put(cls, new ArrayList<>());
 
-                    // get list of classes that this class depends on
-
-
                     i++; // count the number of classes being loaded
 
                 } // if
@@ -129,7 +130,6 @@ public class MetricCalculator {
             } // while
 
             System.out.println(i + " classes loaded.");
-            System.out.println("map size: " + classMetrics.size());
 
         } catch (Exception e){
 
@@ -138,7 +138,138 @@ public class MetricCalculator {
 
     } // populateAdjacencyList()
 
-    // get list all of the classes that a class depends on
+    /**
+     * Add the dependencies for each class in the jar, to the adjacency list
+     */
+    private void addDependenciesToList(){
+
+        List<Class> dependencies = null;
+
+        // for each class added to the list
+        for(Class c : classAdjancencyList.keySet()){
+
+            // get the classes dependencies
+            dependencies = getClassDependencies(c);
+
+            // add dependencies to adjacency list
+            classAdjancencyList.put(c, dependencies);
+
+
+        } // for
+
+    } // addDependenciesToList()
+
+    /**
+     * Gets list of all of the classes that a class depends on
+     *
+     * @param cls
+     * The class that you want to get the dependencies for.
+     *
+     * @return
+     * Returns a list of Class objects that are the dependencies for the selected class
+     */
+    private List<Class> getClassDependencies(Class cls){
+
+        System.out.println(cls.getName());
+        List<Class> classDependencies = new ArrayList<>();
+
+        boolean iface = cls.isInterface(); //Is it an interface?
+        //System.out.println("Is Class an Interface?: " + iface);
+
+        Class[] interfaces = cls.getInterfaces(); //Get the set of interface it implements
+        // for each interface, print name
+        for(Class i : interfaces){
+
+            if(classAdjancencyList.containsKey(i.getName())) {
+
+                // add class to adjacency list (ie increment outdegree)
+                classDependencies.add(i);
+
+                System.out.println("Implements Interface: " + i.getName());
+
+            } // if
+            //System.out.println("Implements Interface: " + i.getName());
+
+        } // foreach
+
+        Constructor[] cons = cls.getConstructors(); //Get the set of constructors
+        Class[] constructorParams;
+
+        // for each constructor, get it's parameters
+        for(Constructor c : cons){
+
+            //System.out.println("Contructor: " + c.getName());
+            constructorParams = c.getParameterTypes(); //Get the parameters
+            for(Class param : constructorParams){
+
+                if(classAdjancencyList.containsKey(param.getName())){
+
+                    // add class to adjacency list (ie increment outdegree)
+                    classDependencies.add(param);
+
+                } // if
+
+                //System.out.println("Constructor Param: " + param.getName());
+            } // foreach
+        } // foreach
+
+        Field[] fields = cls.getFields(); //Get the fields / attributes
+
+        for(Field f : fields){
+
+            // get class from field
+            Class c = f.getDeclaringClass();
+
+            //System.out.println("Field: " + f.getName());
+
+            if(classAdjancencyList.containsKey(c.getName())){
+
+                // add class to adjacency list (ie increment outdegree)
+                classDependencies.add(c);
+
+                System.out.println("Field class: " + c.getName());
+
+            } // if
+
+        } // foreach
+
+        Method[] methods = cls.getMethods(); //Get the set of methods
+        Class[] methodParams;
+
+        // for each method, print its return type
+        for(Method m : methods){
+
+            //System.out.println("Method: " + m.getName());
+
+            Class methodReturnType = m.getReturnType(); //Get a method return type
+            //System.out.println("Method Return Type: " + methodReturnType.getName());
+
+            if(classAdjancencyList.containsKey(methodReturnType.getName())){
+
+                // add class to adjacency list (ie increment outdegree)
+                classDependencies.add(methodReturnType);
+
+            } // if
+
+            methodParams = m.getParameterTypes(); //Get method parameters
+            for(Class mp : methodParams){
+
+                //System.out.println("Method Param: " + mp.getName());
+
+                if(classAdjancencyList.containsKey(mp.getName())){
+
+                    // add class to adjacency list (ie increment outdegree)
+                    classDependencies.add(mp);
+
+                } // if
+            } // foreach
+        } // foreach
+
+        System.out.println("Dependency list length: " + classDependencies.size());
+
+        return classDependencies;
+
+    } // getClassDependencies()
 
     // calculate the positional stability of each class
 
