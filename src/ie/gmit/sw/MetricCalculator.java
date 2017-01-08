@@ -7,14 +7,14 @@ import java.util.*;
 import java.util.jar.*;
 
 /**
- * Created by rossbyrne on 06/01/17.
+ * Created by Ross Byrne on 06/01/17.
  * Calculates the stability metric. Also stores the classes in
  * an adjacency list.
  */
 public class MetricCalculator {
 
     private HashMap<String, BasicMetric> classMetrics = new HashMap<>();
-    private HashMap<Class, List<Class>> classAdjancencyList = new HashMap<>();
+    private HashMap<Class, List<Class>> classAdjacencyList = new HashMap<>();
     private String jarPathName;
 
     /**
@@ -118,7 +118,7 @@ public class MetricCalculator {
                     cls = getClassFromJar(name);
 
                     // add class name to map with empty list of classes
-                    classAdjancencyList.put(cls, new ArrayList<>());
+                    classAdjacencyList.put(cls, new ArrayList<>());
 
                     i++; // count the number of classes being loaded
 
@@ -146,14 +146,13 @@ public class MetricCalculator {
         List<Class> dependencies = null;
 
         // for each class added to the list
-        for(Class c : classAdjancencyList.keySet()){
+        for(Class c : classAdjacencyList.keySet()){
 
             // get the classes dependencies
             dependencies = getClassDependencies(c);
 
             // add dependencies to adjacency list
-            classAdjancencyList.put(c, dependencies);
-
+            classAdjacencyList.put(c, dependencies);
 
         } // for
 
@@ -170,7 +169,6 @@ public class MetricCalculator {
      */
     private List<Class> getClassDependencies(Class cls){
 
-        System.out.println(cls.getName());
         List<Class> classDependencies = new ArrayList<>();
 
         boolean iface = cls.isInterface(); //Is it an interface?
@@ -180,7 +178,9 @@ public class MetricCalculator {
         // for each interface, print name
         for(Class i : interfaces){
 
-            if(classAdjancencyList.containsKey(i.getName())) {
+            if(classAdjacencyList.containsKey(i)) {
+
+                System.out.println("YES");
 
                 // add class to adjacency list (ie increment outdegree)
                 classDependencies.add(i);
@@ -202,7 +202,7 @@ public class MetricCalculator {
             constructorParams = c.getParameterTypes(); //Get the parameters
             for(Class param : constructorParams){
 
-                if(classAdjancencyList.containsKey(param.getName())){
+                if(classAdjacencyList.containsKey(param)){
 
                     // add class to adjacency list (ie increment outdegree)
                     classDependencies.add(param);
@@ -222,7 +222,7 @@ public class MetricCalculator {
 
             //System.out.println("Field: " + f.getName());
 
-            if(classAdjancencyList.containsKey(c.getName())){
+            if(classAdjacencyList.containsKey(c)){
 
                 // add class to adjacency list (ie increment outdegree)
                 classDependencies.add(c);
@@ -244,7 +244,7 @@ public class MetricCalculator {
             Class methodReturnType = m.getReturnType(); //Get a method return type
             //System.out.println("Method Return Type: " + methodReturnType.getName());
 
-            if(classAdjancencyList.containsKey(methodReturnType.getName())){
+            if(classAdjacencyList.containsKey(methodReturnType)){
 
                 // add class to adjacency list (ie increment outdegree)
                 classDependencies.add(methodReturnType);
@@ -256,7 +256,7 @@ public class MetricCalculator {
 
                 //System.out.println("Method Param: " + mp.getName());
 
-                if(classAdjancencyList.containsKey(mp.getName())){
+                if(classAdjacencyList.containsKey(mp)){
 
                     // add class to adjacency list (ie increment outdegree)
                     classDependencies.add(mp);
@@ -265,7 +265,7 @@ public class MetricCalculator {
             } // foreach
         } // foreach
 
-        System.out.println("Dependency list length: " + classDependencies.size());
+        System.out.println("Dependency list length: " + classDependencies.size() + ". Class: " + cls.getName());
 
         return classDependencies;
 
