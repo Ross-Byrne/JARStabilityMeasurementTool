@@ -165,20 +165,35 @@ public class AppWindow {
                 if(txtFileName.getText().length() > 1){
 
                     // check which radio button is selected
-                    System.out.println(group.isSelected(btnBetterAnalysis.getModel()));
+                    if(group.isSelected(btnBetterAnalysis.getModel())) { // if better analysis is selected
 
-                    // analyse JAR
-                    //BasicMetricCalculator metricCalculator = new BasicMetricCalculator(txtFileName.getText());
-                    MetricCalculator metricCalculator = new MetricCalculator(txtFileName.getText());
+                        // analyse JAR
+                        MetricCalculator metricCalculator = new MetricCalculator(txtFileName.getText());
 
-                    // create the summary
-                    as =  new AppSummary(frame, true);
+                        // create the summary
+                        as = new AppSummary(frame, true);
 
-                    // get handle on summary table model
-                    TypeSummaryTableModel tm = as.getTableModel();
+                        // get handle on summary table model
+                        TypeSummaryTableModel tm = as.getTableModel();
 
-                    // add metric data into table model
-                    tm.setTableData(metricCalculator.getMetricData());
+                        // add metric data into table model
+                        tm.setTableData(metricCalculator.getMetricData());
+
+                    } else { // if basic analysis is selected
+
+                        // analyse JAR
+                        BasicMetricCalculator metricCalculator = new BasicMetricCalculator(txtFileName.getText());
+
+                        // create the summary
+                        as = new AppSummary(frame, true);
+
+                        // get handle on summary table model
+                        TypeSummaryTableModel tm = as.getTableModel();
+
+                        // add metric data into table model
+                        tm.setTableData(metricCalculator.getMetricData());
+                        
+                    } // if
 
                     // make the dialog visible
                     as.setVisible(true);

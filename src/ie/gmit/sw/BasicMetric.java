@@ -3,7 +3,7 @@ package ie.gmit.sw;
 /**
  * Created by Ross Byrne on 02/01/17.
  * A Class used for calculating the positional stability metric
- * This uses the very basic method of calculation with retaining a
+ * This uses the very basic method of calculation without retaining a
  * class adjacency list
  */
 public class BasicMetric {

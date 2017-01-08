@@ -43,19 +43,19 @@ public class MetricCalculator {
     public Object[][] getMetricData(){
 
         int i = 0;
-        Object[][] data = new Object[classMetrics.size()][4];
+        Object[][] data = new Object[classAdjacencyList.size()][4];
 
         // order of data for cols
         // cols = {"Class", "Stability", "Out Degree", "In Degree"};
 
-        // for each metric object in the map
-        for(BasicMetric m : classMetrics.values()){
+        // for each class in the adjacency list
+        for(Class c : classAdjacencyList.keySet()){
 
             // add data to the 2d array
-            data[i][0] = m.getClassName();  // set class name
-            data[i][1] = m.getStability();  // set stability
-            data[i][2] = m.getOutDegree();  // set outDegree
-            data[i][3] = m.getInDegree();   // set inDegree
+            data[i][0] = c.getName();       // set class name
+            data[i][1] = 0;                 // set stability
+            data[i][2] = getOutDegree(c);   // set outDegree
+            data[i][3] = getInDegree(c);    // set inDegree
 
             // increment counter
             i++;
@@ -271,7 +271,60 @@ public class MetricCalculator {
 
     } // getClassDependencies()
 
-    // calculate the positional stability of each class
+    /**
+     * Calculates the in degree for a class, using the adjacency list.
+     *
+     * @param cls
+     * The class you want to get the in degree for.
+     *
+     * @return
+     * The in degree of the selected class, as an int.
+     */
+    private int getInDegree(Class cls){
+
+        int inDegree = 0;
+
+        // for each class in the adjacency list
+        for(Class c : classAdjacencyList.keySet()){
+
+            // for each class in the list of classes
+            for(Class dependencyClass : classAdjacencyList.get(c)){
+
+                // if the dependency class is equal to class being checked
+                if(cls.equals(dependencyClass)){
+
+                    // class being checked is depended on
+                    // increment inDegree
+                    inDegree++;
+
+                } // if
+
+            } // for
+        } // for
+
+        return inDegree;
+
+    } // getInDegree()
+
+    /**
+     * Gets the out degree of the selected class, used the adjacency list.
+     *
+     * @param cls
+     * The class you want to get the out degree for.
+     *
+     * @return
+     * The out degree of the selected class, as an int.
+     */
+    private int getOutDegree(Class cls){
+
+        int outDegree = 0;
+
+        // the number of classes in the adjacency list is selected classes outdegree
+        outDegree = classAdjacencyList.get(cls).size();
+
+        return outDegree;
+
+    } // getOutDegree()
 
     /**
      * Gets the class, using a classLoader, from the jar file.
