@@ -45,7 +45,7 @@ public class JarAnalyser {
                     if (!name.contains("$")) name.substring(0, name.length() - ".class".length());
                     //System.out.println("Class Name: " + name); // same as below
 
-                    // get handle on class, using the class loader, not intialising the class
+                    // get handle on class, using the class loader, not initialising the class
                     Class cls = Class.forName(name, false, cl);
 
                     System.out.println("Class Name: " + cls.getName());

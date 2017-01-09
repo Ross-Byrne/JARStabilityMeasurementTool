@@ -13,8 +13,7 @@ import java.util.jar.*;
  */
 public class MetricCalculator {
 
-    private HashMap<String, BasicMetric> classMetrics = new HashMap<>();
-    private HashMap<Class, List<Class>> classAdjacencyList = new HashMap<>();
+    private HashMap<Class, Metric> classMetrics = new HashMap<>();
     private String jarPathName;
 
     /**
@@ -28,8 +27,18 @@ public class MetricCalculator {
         // save the jar pathname
         this.jarPathName = pathname;
 
-        // process the classes in the jar
-        processClassesInJAR();
+        // add the classes in jar to map
+        addClassNamesToMap();
+
+        // calculate the metrics for classes in map
+        calculateBasicMetric();
+
+        // print out outdegree for classes
+//        for(BasicMetric m : classMetrics.values()){
+//
+//            // print out outdegrees of classes
+//            System.out.printf("\nOutdegree: %d. Indegree: %d. Stability: %.2f. Class: %s", m.getOutDegree(), m.getInDegree(), m.getStability(), m.getClassName());
+//        }
 
     } // constructor
 
@@ -43,19 +52,19 @@ public class MetricCalculator {
     public Object[][] getMetricData(){
 
         int i = 0;
-        Object[][] data = new Object[classAdjacencyList.size()][4];
+        Object[][] data = new Object[classMetrics.size()][4];
 
         // order of data for cols
         // cols = {"Class", "Stability", "Out Degree", "In Degree"};
 
-        // for each class in the adjacency list
-        for(Class c : classAdjacencyList.keySet()){
+        // for each metric object in the map
+        for(Metric m : classMetrics.values()){
 
             // add data to the 2d array
-            data[i][0] = c.getName();       // set class name
-            data[i][1] = 0;                 // set stability
-            data[i][2] = getOutDegree(c);   // set outDegree
-            data[i][3] = getInDegree(c);    // set inDegree
+            data[i][0] = m.getClassName();  // set class name
+            data[i][1] = m.getStability();  // set stability
+            data[i][2] = m.getOutDegree();  // set outDegree
+            data[i][3] = m.getInDegree();   // set inDegree
 
             // increment counter
             i++;
@@ -66,304 +75,7 @@ public class MetricCalculator {
     } // getMetricData()
 
     /**
-     * Processes the classes in the jar by,
-     * Adding the classes to the adjacency list
-     * and then getting the dependencies classes for that class
-     * and adding that list to the adjacency list.
-     */
-    private void processClassesInJAR(){
-
-        // populate the adjacency list with the list of classes in the jar
-        populateAdjacencyList();
-
-        // add the dependencies for each class in the adjacency list
-        addDependenciesToList();
-
-    } // processClassesInJAR()
-
-    /**
-     * Gets each class from the JAR and adds them to the adjacency list.
-     * It does this using a classLoader that is pointed at the JAR file.
-     */
-    private void populateAdjacencyList(){
-
-        int i = 0;
-
-        try {
-
-            // get handle on jar file
-            File file  = new File(jarPathName);
-
-            // create inputStream for jar
-            JarInputStream in = new JarInputStream(new FileInputStream(file));
-
-            // get jar entry
-            JarEntry next = in.getNextJarEntry();
-
-            Class cls = null;
-
-            // loop through all jar entries
-            while (next != null) {
-
-                // if the file in jar is a class
-                if (next.getName().endsWith(".class")) {
-
-                    // format the class name
-                    String name = next.getName().replaceAll("/", "\\.");
-                    name = name.replaceAll(".class", "");
-                    if (!name.contains("$")) name.substring(0, name.length() - ".class".length());
-                    //System.out.println("Class Name: " + name); // print out name
-
-                    // get class from jar
-                    cls = getClassFromJar(name);
-
-                    // add class name to map with empty list of classes
-                    classAdjacencyList.put(cls, new ArrayList<>());
-
-                    i++; // count the number of classes being loaded
-
-                } // if
-
-                // get next entry
-                next = in.getNextJarEntry();
-
-            } // while
-
-            System.out.println(i + " classes loaded.");
-
-        } catch (Exception e){
-
-            e.printStackTrace();
-        } // try catch
-
-    } // populateAdjacencyList()
-
-    /**
-     * Add the dependencies for each class in the jar, to the adjacency list
-     */
-    private void addDependenciesToList(){
-
-        List<Class> dependencies = null;
-
-        // for each class added to the list
-        for(Class c : classAdjacencyList.keySet()){
-
-            // get the classes dependencies
-            dependencies = getClassDependencies(c);
-
-            // add dependencies to adjacency list
-            classAdjacencyList.put(c, dependencies);
-
-        } // for
-
-    } // addDependenciesToList()
-
-    /**
-     * Gets list of all of the classes that a class depends on
-     *
-     * @param cls
-     * The class that you want to get the dependencies for.
-     *
-     * @return
-     * Returns a list of Class objects that are the dependencies for the selected class
-     */
-    private List<Class> getClassDependencies(Class cls){
-
-        List<Class> classDependencies = new ArrayList<>();
-
-        boolean iface = cls.isInterface(); //Is it an interface?
-        //System.out.println("Is Class an Interface?: " + iface);
-
-        Class[] interfaces = cls.getInterfaces(); //Get the set of interface it implements
-        // for each interface, print name
-        for(Class i : interfaces){
-
-            if(classAdjacencyList.containsKey(i)) {
-
-                System.out.println("YES");
-
-                // add class to adjacency list (ie increment outdegree)
-                classDependencies.add(i);
-
-                System.out.println("Implements Interface: " + i.getName());
-
-            } // if
-            //System.out.println("Implements Interface: " + i.getName());
-
-        } // foreach
-
-        Constructor[] cons = cls.getConstructors(); //Get the set of constructors
-        Class[] constructorParams;
-
-        // for each constructor, get it's parameters
-        for(Constructor c : cons){
-
-            //System.out.println("Contructor: " + c.getName());
-            constructorParams = c.getParameterTypes(); //Get the parameters
-            for(Class param : constructorParams){
-
-                if(classAdjacencyList.containsKey(param)){
-
-                    // add class to adjacency list (ie increment outdegree)
-                    classDependencies.add(param);
-
-                } // if
-
-                //System.out.println("Constructor Param: " + param.getName());
-            } // foreach
-        } // foreach
-
-        Field[] fields = cls.getFields(); //Get the fields / attributes
-
-        for(Field f : fields){
-
-            // get class from field
-            Class c = f.getDeclaringClass();
-
-            //System.out.println("Field: " + f.getName());
-
-            if(classAdjacencyList.containsKey(c)){
-
-                // add class to adjacency list (ie increment outdegree)
-                classDependencies.add(c);
-
-                System.out.println("Field class: " + c.getName());
-
-            } // if
-
-        } // foreach
-
-        Method[] methods = cls.getMethods(); //Get the set of methods
-        Class[] methodParams;
-
-        // for each method, print its return type
-        for(Method m : methods){
-
-            //System.out.println("Method: " + m.getName());
-
-            Class methodReturnType = m.getReturnType(); //Get a method return type
-            //System.out.println("Method Return Type: " + methodReturnType.getName());
-
-            if(classAdjacencyList.containsKey(methodReturnType)){
-
-                // add class to adjacency list (ie increment outdegree)
-                classDependencies.add(methodReturnType);
-
-            } // if
-
-            methodParams = m.getParameterTypes(); //Get method parameters
-            for(Class mp : methodParams){
-
-                //System.out.println("Method Param: " + mp.getName());
-
-                if(classAdjacencyList.containsKey(mp)){
-
-                    // add class to adjacency list (ie increment outdegree)
-                    classDependencies.add(mp);
-
-                } // if
-            } // foreach
-        } // foreach
-
-        System.out.println("Dependency list length: " + classDependencies.size() + ". Class: " + cls.getName());
-
-        return classDependencies;
-
-    } // getClassDependencies()
-
-    /**
-     * Calculates the in degree for a class, using the adjacency list.
-     *
-     * @param cls
-     * The class you want to get the in degree for.
-     *
-     * @return
-     * The in degree of the selected class, as an int.
-     */
-    private int getInDegree(Class cls){
-
-        int inDegree = 0;
-
-        // for each class in the adjacency list
-        for(Class c : classAdjacencyList.keySet()){
-
-            // for each class in the list of classes
-            for(Class dependencyClass : classAdjacencyList.get(c)){
-
-                // if the dependency class is equal to class being checked
-                if(cls.equals(dependencyClass)){
-
-                    // class being checked is depended on
-                    // increment inDegree
-                    inDegree++;
-
-                } // if
-
-            } // for
-        } // for
-
-        return inDegree;
-
-    } // getInDegree()
-
-    /**
-     * Gets the out degree of the selected class, used the adjacency list.
-     *
-     * @param cls
-     * The class you want to get the out degree for.
-     *
-     * @return
-     * The out degree of the selected class, as an int.
-     */
-    private int getOutDegree(Class cls){
-
-        int outDegree = 0;
-
-        // the number of classes in the adjacency list is selected classes outdegree
-        outDegree = classAdjacencyList.get(cls).size();
-
-        return outDegree;
-
-    } // getOutDegree()
-
-    /**
-     * Gets the class, using a classLoader, from the jar file.
-     *
-     * @param name
-     * The name of the class as a String.
-     *
-     * @return
-     * Returns the class loaded from the classLoader as Class object.
-     */
-    private Class getClassFromJar(String name){
-
-        Class cls = null;
-
-        try {
-            // get handle on jar file
-            File file = new File(jarPathName);
-
-            // create a url to file
-            URL url = file.toURI().toURL();
-            URL[] urls = new URL[]{url};
-
-            // create a ClassLoader to load classes from the JAR file
-            ClassLoader cl = new URLClassLoader(urls);
-
-            // get handle on class, using the class loader, not initialising the class
-            cls = Class.forName(name, false, cl);
-
-        } catch(Exception e){
-
-            e.printStackTrace();
-        } // try
-
-        return cls;
-
-    } // getClassFromJar()
-
-    /**
-     * Adds the class names to the map with the metrics
+     * Addeds the class to the map with the metrics
      */
     private void addClassNamesToMap(){
 
@@ -380,11 +92,9 @@ public class MetricCalculator {
             // get jar entry
             JarEntry next = in.getNextJarEntry();
 
-            // create a url to file
             URL url = file.toURI().toURL();
             URL[] urls = new URL[]{url};
 
-            // create a ClassLoader to load classes from the JAR file
             ClassLoader cl = new URLClassLoader(urls);
 
             // loop through all jar entries
@@ -403,10 +113,10 @@ public class MetricCalculator {
                     Class cls = Class.forName(name, false, cl);
 
                     // add class name to map with empty metric object
-                    classMetrics.put(name, new BasicMetric());
+                    classMetrics.put(cls, new Metric());
 
                     // set the class name for metric
-                    classMetrics.get(name).setClassName(name);
+                    classMetrics.get(cls).setClassName(name);
 
                     i++; // count the number of classes being loaded
 
@@ -445,12 +155,12 @@ public class MetricCalculator {
             ClassLoader cl = new URLClassLoader(urls);
 
             // loop for each key in the classMetrics map
-            for (String className : classMetrics.keySet()) {
+            for (Class cls : classMetrics.keySet()) {
 
                 //System.out.println(className);
 
                 // get handle on class, using the class loader, not intialising the class
-                Class cls = Class.forName(className, false, cl);
+               // Class cls = Class.forName(className, false, cl);
 
                 // analyse class to calculate in and out degree
                 analyseClass(cls);
@@ -485,13 +195,13 @@ public class MetricCalculator {
         // for each interface, print name
         for(Class i : interfaces){
 
-            if(classMetrics.containsKey(i.getName())) {
+            if(classMetrics.containsKey(i)) {
 
                 // increment outdegree
                 outdegree++;
 
                 // increment indegree for interface
-                BasicMetric m = classMetrics.get(i.getName());
+                Metric m = classMetrics.get(i);
                 m.setInDegree(m.getInDegree() + 1);
 
                 //System.out.println("Implements Interface: " + i.getName());
@@ -511,13 +221,13 @@ public class MetricCalculator {
             constructorParams = c.getParameterTypes(); //Get the parameters
             for(Class param : constructorParams){
 
-                if(classMetrics.containsKey(param.getName())){
+                if(classMetrics.containsKey(param)){
 
                     // increment outdegree
                     outdegree++;
 
                     // increment indegree for other class
-                    BasicMetric m = classMetrics.get(param.getName());
+                    Metric m = classMetrics.get(param);
                     m.setInDegree(m.getInDegree() + 1);
 
                 } // if
@@ -532,13 +242,13 @@ public class MetricCalculator {
 
             //System.out.println("Field: " + f.getName());
 
-            if(classMetrics.containsKey(f.getName())){
+            if(classMetrics.containsKey(f)){
 
                 // increment outdegree
                 outdegree++;
 
                 // increment indegree for interface
-                BasicMetric m = classMetrics.get(f.getName());
+                Metric m = classMetrics.get(f);
                 m.setInDegree(m.getInDegree() + 1);
 
             } // if
@@ -555,13 +265,13 @@ public class MetricCalculator {
             Class methodReturnType = m.getReturnType(); //Get a method return type
             //System.out.println("Method Return Type: " + methodReturnType.getName());
 
-            if(classMetrics.containsKey(methodReturnType.getName())){
+            if(classMetrics.containsKey(methodReturnType)){
 
                 // increment outdegree
                 outdegree++;
 
                 // increment indegree for interface
-                BasicMetric bm = classMetrics.get(methodReturnType.getName());
+                Metric bm = classMetrics.get(methodReturnType);
                 bm.setInDegree(bm.getInDegree() + 1);
             }
 
@@ -570,13 +280,13 @@ public class MetricCalculator {
 
                 //System.out.println("Method Param: " + mp.getName());
 
-                if(classMetrics.containsKey(mp.getName())){
+                if(classMetrics.containsKey(mp)){
 
                     // increment outdegree
                     outdegree++;
 
                     // increment indegree for interface
-                    BasicMetric bm = classMetrics.get(mp.getName());
+                    Metric bm = classMetrics.get(mp);
                     bm.setInDegree(bm.getInDegree() + 1);
 
                 } // if
@@ -585,8 +295,9 @@ public class MetricCalculator {
 
         // System.out.println("outdegree: " + outdegree + ". Class: " + cls.getName());
 
-        classMetrics.get(cls.getName()).setOutDegree(outdegree);
+        classMetrics.get(cls).setOutDegree(outdegree);
 
     } // analyseClass()
+
 
 } // class
