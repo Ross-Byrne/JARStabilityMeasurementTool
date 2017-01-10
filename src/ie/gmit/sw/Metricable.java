@@ -15,30 +15,12 @@ public interface Metricable {
     public int getInDegree();
 
     /**
-     * Sets the inDegree for the class this metric represents.
-     *
-     * @param inDegree
-     * The in degree of the class, which is the number of classes that
-     * depend on this class.
-     */
-    public void setInDegree(int inDegree);
-
-    /**
      * Gets the outDegree for the class this metric represents.
      *
      * @return
      * Returns the outDegree as an int.
      */
     public int getOutDegree();
-
-    /**
-     * Sets the outDegree for the class this metric represents.
-     *
-     * @param outDegree
-     * The out degree of the class, which is the number of
-     * classes this class depends on.
-     */
-    public void setOutDegree(int outDegree);
 
     /**
      * Uses the inDegree and outDegree to calculate the stability.

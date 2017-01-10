@@ -33,13 +33,6 @@ public class BasicMetricCalculator implements MetricCalculatorable {
         // calculate the metrics for classes in map
         calculateBasicMetric();
 
-        // print out outdegree for classes
-//        for(BasicMetric m : classMetrics.values()){
-//
-//            // print out outdegrees of classes
-//            System.out.printf("\nOutdegree: %d. Indegree: %d. Stability: %.2f. Class: %s", m.getOutDegree(), m.getInDegree(), m.getStability(), m.getClassName());
-//        }
-
     } // analyseJarFile()
 
     /**

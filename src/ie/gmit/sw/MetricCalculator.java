@@ -33,13 +33,6 @@ public class MetricCalculator implements MetricCalculatorable {
         // calculate the metrics for classes in map
         calculateBasicMetric();
 
-        // print out outdegree for classes
-//        for(BasicMetric m : classMetrics.values()){
-//
-//            // print out outdegrees of classes
-//            System.out.printf("\nOutdegree: %d. Indegree: %d. Stability: %.2f. Class: %s", m.getOutDegree(), m.getInDegree(), m.getStability(), m.getClassName());
-//        }
-
     } // analyseJarFile()
 
     /**
@@ -173,14 +166,6 @@ public class MetricCalculator implements MetricCalculatorable {
      */
     private void analyseClass(Class cls){
 
-        int outDegree = 0;
-
-        //Package pack = cls.getPackage(); //Get the package
-        //System.out.println("Package Name: " + pack.getName());
-
-        boolean iface = cls.isInterface(); //Is it an interface?
-        //System.out.println("Is Class an Interface?: " + iface);
-
         Class[] interfaces = cls.getInterfaces(); //Get the set of interface it implements
         // for each interface, print name
         for(Class i : interfaces){
@@ -188,14 +173,14 @@ public class MetricCalculator implements MetricCalculatorable {
             if(classMetrics.containsKey(i)) {
 
                 // increment outDegree
-                outDegree++;
-
                 // to build adjacency list, save this class to adjacent classes list
-                classMetrics.get(cls).addClass(i);
+                classMetrics.get(cls).addAdjacentClass(i);
 
-                // increment indegree for interface
+                // increment indegree for interface by
+                // saving the selected class to classes dependents (for indegree)
+                // this is to tell the class, the selected class depends on, that it depends on it
                 Metric m = classMetrics.get(i);
-                m.setInDegree(m.getInDegree() + 1);
+                m.addDependantClass(cls);
 
                 //System.out.println("Implements Interface: " + i.getName());
 
@@ -217,14 +202,14 @@ public class MetricCalculator implements MetricCalculatorable {
                 if(classMetrics.containsKey(param)){
 
                     // increment outDegree
-                    outDegree++;
-
                     // to build adjacency list, save this class to adjacent classes list
-                    classMetrics.get(cls).addClass(param);
+                    classMetrics.get(cls).addAdjacentClass(param);
 
-                    // increment indegree for other class
+                    // increment indegree for other class by
+                    // saving the selected class to classes dependents (for indegree)
+                    // this is to tell the class, the selected class depends on, that it depends on it
                     Metric m = classMetrics.get(param);
-                    m.setInDegree(m.getInDegree() + 1);
+                    m.addDependantClass(cls);
 
                 } // if
 
@@ -241,16 +226,15 @@ public class MetricCalculator implements MetricCalculatorable {
             if(classMetrics.containsKey(f)){
 
                 // increment outDegree
-                outDegree++;
-
-                Class c = f.getDeclaringClass();
-
                 // to build adjacency list, save this class to adjacent classes list
-                classMetrics.get(cls).addClass(c);
+                Class c = f.getDeclaringClass();
+                classMetrics.get(cls).addAdjacentClass(c);
 
-                // increment indegree for interface
+                // increment indegree for class by
+                // saving the selected class to classes dependents (for indegree)
+                // this is to tell the class, the selected class depends on, that it depends on it
                 Metric m = classMetrics.get(f);
-                m.setInDegree(m.getInDegree() + 1);
+                m.addDependantClass(cls);
 
             } // if
         } // foreach
@@ -269,14 +253,14 @@ public class MetricCalculator implements MetricCalculatorable {
             if(classMetrics.containsKey(methodReturnType)){
 
                 // increment outDegree
-                outDegree++;
-
                 // to build adjacency list, save this class to adjacent classes list
-                classMetrics.get(cls).addClass(methodReturnType);
+                classMetrics.get(cls).addAdjacentClass(methodReturnType);
 
-                // increment indegree for interface
-                Metric bm = classMetrics.get(methodReturnType);
-                bm.setInDegree(bm.getInDegree() + 1);
+                // increment indegree for class by
+                // saving the selected class to classes dependents (for indegree)
+                // this is to tell the class, the selected class depends on, that it depends on it
+                Metric mt = classMetrics.get(methodReturnType);
+                mt.addDependantClass(cls);
             }
 
             methodParams = m.getParameterTypes(); //Get method parameters
@@ -287,23 +271,18 @@ public class MetricCalculator implements MetricCalculatorable {
                 if(classMetrics.containsKey(mp)){
 
                     // increment outDegree
-                    outDegree++;
-
                     // to build adjacency list, save this class to adjacent classes list
-                    classMetrics.get(cls).addClass(mp);
+                    classMetrics.get(cls).addAdjacentClass(mp);
 
-                    // increment indegree for interface
-                    Metric bm = classMetrics.get(mp);
-                    bm.setInDegree(bm.getInDegree() + 1);
+                    // increment indegree for class by
+                    // saving the selected class to classes dependents (for indegree)
+                    // this is to tell the class, the selected class depends on, that it depends on it
+                    Metric mt = classMetrics.get(mp);
+                    mt.addDependantClass(cls);
 
                 } // if
             } // foreach
         } // foreach
-
-        // System.out.println("outDegree: " + outDegree + ". Class: " + cls.getName());
-
-        // save the outDegree for selected class
-        classMetrics.get(cls).setOutDegree(outDegree);
 
     } // analyseClass()
 
