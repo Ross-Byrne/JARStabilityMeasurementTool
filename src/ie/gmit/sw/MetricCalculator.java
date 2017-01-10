@@ -75,7 +75,7 @@ public class MetricCalculator {
     } // getMetricData()
 
     /**
-     * Addeds the class to the map with the metrics
+     * Adds the class to the map with the metrics
      */
     private void addClassNamesToMap(){
 
@@ -117,6 +117,9 @@ public class MetricCalculator {
 
                     // set the class name for metric
                     classMetrics.get(cls).setClassName(name);
+
+                    // set the class for the metric
+                    classMetrics.get(cls).setTheClass(cls);
 
                     i++; // count the number of classes being loaded
 
@@ -183,7 +186,7 @@ public class MetricCalculator {
      */
     private void analyseClass(Class cls){
 
-        int outdegree = 0;
+        int outDegree = 0;
 
         //Package pack = cls.getPackage(); //Get the package
         //System.out.println("Package Name: " + pack.getName());
@@ -197,8 +200,11 @@ public class MetricCalculator {
 
             if(classMetrics.containsKey(i)) {
 
-                // increment outdegree
-                outdegree++;
+                // increment outDegree
+                outDegree++;
+
+                // to build adjacency list, save this class to adjacent classes list
+                classMetrics.get(cls).addClass(i);
 
                 // increment indegree for interface
                 Metric m = classMetrics.get(i);
@@ -223,8 +229,11 @@ public class MetricCalculator {
 
                 if(classMetrics.containsKey(param)){
 
-                    // increment outdegree
-                    outdegree++;
+                    // increment outDegree
+                    outDegree++;
+
+                    // to build adjacency list, save this class to adjacent classes list
+                    classMetrics.get(cls).addClass(param);
 
                     // increment indegree for other class
                     Metric m = classMetrics.get(param);
@@ -244,8 +253,13 @@ public class MetricCalculator {
 
             if(classMetrics.containsKey(f)){
 
-                // increment outdegree
-                outdegree++;
+                // increment outDegree
+                outDegree++;
+
+                Class c = f.getDeclaringClass();
+
+                // to build adjacency list, save this class to adjacent classes list
+                classMetrics.get(cls).addClass(c);
 
                 // increment indegree for interface
                 Metric m = classMetrics.get(f);
@@ -267,8 +281,11 @@ public class MetricCalculator {
 
             if(classMetrics.containsKey(methodReturnType)){
 
-                // increment outdegree
-                outdegree++;
+                // increment outDegree
+                outDegree++;
+
+                // to build adjacency list, save this class to adjacent classes list
+                classMetrics.get(cls).addClass(methodReturnType);
 
                 // increment indegree for interface
                 Metric bm = classMetrics.get(methodReturnType);
@@ -282,8 +299,11 @@ public class MetricCalculator {
 
                 if(classMetrics.containsKey(mp)){
 
-                    // increment outdegree
-                    outdegree++;
+                    // increment outDegree
+                    outDegree++;
+
+                    // to build adjacency list, save this class to adjacent classes list
+                    classMetrics.get(cls).addClass(mp);
 
                     // increment indegree for interface
                     Metric bm = classMetrics.get(mp);
@@ -293,9 +313,10 @@ public class MetricCalculator {
             } // foreach
         } // foreach
 
-        // System.out.println("outdegree: " + outdegree + ". Class: " + cls.getName());
+        // System.out.println("outDegree: " + outDegree + ". Class: " + cls.getName());
 
-        classMetrics.get(cls).setOutDegree(outdegree);
+        // save the outDegree for selected class
+        classMetrics.get(cls).setOutDegree(outDegree);
 
     } // analyseClass()
 
