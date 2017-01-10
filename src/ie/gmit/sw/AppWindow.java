@@ -164,38 +164,35 @@ public class AppWindow {
                 // check if their is something entered in the filepath
                 if(txtFileName.getText().length() > 1){
 
+                    MetricCalculatorable metricCalculatorable = null;
+
+                    // get instance of singleton factory for metrics calculator
+                    MetricCalculatorFactory fact = MetricCalculatorFactory.getInstance();
+
                     // check which radio button is selected
                     if(group.isSelected(btnBetterAnalysis.getModel())) { // if better analysis is selected
 
-                        // analyse JAR
-                        MetricCalculator metricCalculator = new MetricCalculator();
-                        metricCalculator.analyseJarFile(txtFileName.getText());
-
-                        // create the summary
-                        as = new AppSummary(frame, true);
-
-                        // get handle on summary table model
-                        TypeSummaryTableModel tm = as.getTableModel();
-
-                        // add metric data into table model
-                        tm.setTableData(metricCalculator.getMetricData());
+                        // get instance of metricCalculatorable
+                        metricCalculatorable = fact.getMetricCalculator(CalculatorType.BETTER);
 
                     } else { // if basic analysis is selected
 
-                        // analyse JAR
-                        BasicMetricCalculator metricCalculator = new BasicMetricCalculator();
-                        metricCalculator.analyseJarFile(txtFileName.getText());
-
-                        // create the summary
-                        as = new AppSummary(frame, true);
-
-                        // get handle on summary table model
-                        TypeSummaryTableModel tm = as.getTableModel();
-
-                        // add metric data into table model
-                        tm.setTableData(metricCalculator.getMetricData());
+                        // get instance of metricCalculatorable
+                        metricCalculatorable = fact.getMetricCalculator(CalculatorType.BASIC);
                         
                     } // if
+
+                    // analyse JAR
+                    metricCalculatorable.analyseJarFile(txtFileName.getText());
+
+                    // create the summary
+                    as = new AppSummary(frame, true);
+
+                    // get handle on summary table model
+                    TypeSummaryTableModel tm = as.getTableModel();
+
+                    // add metric data into table model
+                    tm.setTableData(metricCalculatorable.getMetricData());
 
                     // make the dialog visible
                     as.setVisible(true);

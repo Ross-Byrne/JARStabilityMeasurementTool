@@ -8,7 +8,7 @@ package ie.gmit.sw;
 public class MetricCalculatorFactory {
 
     // private, instantiated factory object for singleton pattern
-    private MetricCalculatorFactory factory = new MetricCalculatorFactory();
+    private static MetricCalculatorFactory factory = new MetricCalculatorFactory();
 
     // private constructor for singleton pattern, so no one can create another instance.
     private MetricCalculatorFactory(){}
@@ -19,9 +19,9 @@ public class MetricCalculatorFactory {
      * @return
      * Returns the instance of the singleton factory, MetricCalculatorFactory.
      */
-    public MetricCalculatorFactory getInstance(){
+    public static MetricCalculatorFactory getInstance(){
 
-        return this.factory;
+        return factory;
 
     } // getInstance()
 
