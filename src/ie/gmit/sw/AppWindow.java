@@ -17,6 +17,9 @@ public class AppWindow {
 	private JRadioButton btnBasicAnalysis;
 	private AppSummary as;
 
+    // create instance of DatabaseManager
+    private DatabaseManager dbManager = new DatabaseManager();
+
     /**
      * Creates and sets up the main swing GUI
      */
@@ -185,6 +188,17 @@ public class AppWindow {
                     // analyse JAR
                     metricCalculatorable.analyseJarFile(txtFileName.getText());
 
+                    // save the metrics to database
+
+                    // create data object to save metrics
+                    MetricData metricData = new MetricData();
+
+                    // get metrics and save them to object
+                    metricData.setData(metricCalculatorable.getMetricData());
+
+                    // save metrics object to the DB
+                    dbManager.addMetricsToDatabase(metricData);
+
                     // create the summary
                     as = new AppSummary(frame, true);
 
@@ -228,14 +242,34 @@ public class AppWindow {
         bottom.setMinimumSize(new Dimension(560, 50));
 
         // create button for showing dialog
-        JButton btnDialog = new JButton("Show Dialog"); //Create Quit button
+        JButton btnDialog = new JButton("Show Last Saved Metrics");
         btnDialog.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
 
-                // create the summary
-                as =  new AppSummary(frame, true);
-            	as.setVisible(true);
+                // get the metrics data
+                MetricData metricData = dbManager.getMetricsFromDB();
 
+                // if there is no metric data saved
+                if(metricData == null){
+
+                    // create an error dialog box
+                    ErrorDialog errorDialog = new ErrorDialog("Error! No Metric Data found!");
+
+                    // show the dialog
+                    errorDialog.setVisible(true);
+
+                } else { // if metric data is found
+
+                    // create the summary
+                    as = new AppSummary(frame, true);
+
+                    // add data to the model
+                    as.getTableModel().setTableData(metricData.getData());
+
+                    // show the dialog window
+                    as.setVisible(true);
+
+                } // if
 			}
         });
 
