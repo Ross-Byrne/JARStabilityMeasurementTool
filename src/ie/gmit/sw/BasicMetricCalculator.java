@@ -11,7 +11,7 @@ import java.util.jar.*;
  * Calculates the basic metric, stability
  */
 
-public class BasicMetricCalculator {
+public class BasicMetricCalculator implements MetricCalculatorable {
 
     private HashMap<String, BasicMetric> classMetrics = new HashMap<>();
     private String jarPathName;

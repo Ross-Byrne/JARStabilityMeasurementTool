@@ -9,9 +9,9 @@ import java.util.jar.*;
 /**
  * Created by Ross Byrne on 06/01/17.
  * Calculates the stability metric. Also stores the classes in
- * an adjacency list.
+ * an adjacency list of sorts.
  */
-public class MetricCalculator {
+public class MetricCalculator implements MetricCalculatorable {
 
     private HashMap<Class, Metric> classMetrics = new HashMap<>();
     private String jarPathName;
@@ -115,9 +115,6 @@ public class MetricCalculator {
                     // add class name to map with empty metric object
                     classMetrics.put(cls, new Metric());
 
-                    // set the class name for metric
-                    classMetrics.get(cls).setClassName(name);
-
                     // set the class for the metric
                     classMetrics.get(cls).setTheClass(cls);
 
@@ -147,28 +144,16 @@ public class MetricCalculator {
 
         try {
 
-            // get handle on jar file
-            File file = new File(jarPathName);
-
-            // create a url to file
-            URL url = file.toURI().toURL();
-            URL[] urls = new URL[]{url};
-
-            // create a ClassLoader to load classes from the JAR file
-            ClassLoader cl = new URLClassLoader(urls);
-
             // loop for each key in the classMetrics map
             for (Class cls : classMetrics.keySet()) {
 
                 //System.out.println(className);
 
-                // get handle on class, using the class loader, not intialising the class
-               // Class cls = Class.forName(className, false, cl);
-
                 // analyse class to calculate in and out degree
                 analyseClass(cls);
 
             } // foreach
+
         } catch (Exception e){
 
             e.printStackTrace();
@@ -177,9 +162,11 @@ public class MetricCalculator {
     } // calculateBasicMetric()
 
     /**
-     * analyses a class to calculate its in and out degree
+     * analyses a class to calculate its in and out degree.
      * a reference to another class increments the classes out degree
-     * and increments the in degree of class being referenced
+     * and increments the in degree of class being referenced.
+     * Classes pointed at by the analysed class, are stored in a set,
+     * to make creating an adjacency list possible.
      *
      * @param cls
      * The class being analysed.

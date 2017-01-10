@@ -24,7 +24,7 @@ public class JarAnalyser {
 
     }
 
-    public void init(String pathname){
+    private void init(String pathname){
 
         try {
 

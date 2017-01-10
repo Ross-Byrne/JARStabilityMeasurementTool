@@ -6,7 +6,7 @@ package ie.gmit.sw;
  * This uses the very basic method of calculation without retaining a
  * class adjacency list
  */
-public class BasicMetric {
+public class BasicMetric implements Metricable {
 
     private int inDegree;
     private int outDegree;
