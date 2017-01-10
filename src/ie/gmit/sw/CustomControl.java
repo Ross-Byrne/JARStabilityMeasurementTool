@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 /**
- * A Custom swing GUI control.
+ * A Custom swing GUI control. Not Currently being used!
  */
 public class CustomControl extends JComponent implements MouseMotionListener, ActionListener{
 
