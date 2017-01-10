@@ -224,7 +224,7 @@ public class AppWindow {
 
         // add mid panel to the main app window
         frame.getContentPane().add(mid);
-        
+
 		// add panel to bottom of window
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottom.setPreferredSize(new Dimension(560, 50));
