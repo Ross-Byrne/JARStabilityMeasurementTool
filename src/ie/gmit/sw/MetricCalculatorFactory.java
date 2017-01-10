@@ -25,4 +25,41 @@ public class MetricCalculatorFactory {
 
     } // getInstance()
 
+    /**
+     * Gets a selected instance of a MetricCalculatorable.
+     * Uses the CalculatorType enum for decide which instance to return.
+     *
+     * @param metricCalc
+     * The Enum CalculatorType, used to decide which metric calculator instance
+     * to return.
+     *
+     * @return
+     * Returns an instance of MetricCalculatorable. used to calculate metric for a class.
+     */
+    public MetricCalculatorable getMetricCalculator(CalculatorType metricCalc){
+
+        MetricCalculatorable selectedCalc = null;
+
+        // switch to use the selected enum to decide which instance to return.
+        switch (metricCalc){
+
+            case BASIC:
+
+                // create an instance of basic metric calculator
+                selectedCalc = new BasicMetricCalculator();
+
+                break;
+
+            case BETTER:
+
+                // create an instance of metric calculator
+                selectedCalc = new MetricCalculator();
+
+                break;
+        } // switch
+
+        return selectedCalc;
+
+    } // getMetricCalculator()
+
 } // class

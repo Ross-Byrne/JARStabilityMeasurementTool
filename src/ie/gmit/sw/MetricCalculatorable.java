@@ -7,6 +7,14 @@ package ie.gmit.sw;
 public interface MetricCalculatorable {
 
     /**
+     * Calculates stability for selected jar
+     *
+     * @param jarPathName
+     * The file path to a .jar file as a String.
+     */
+    public void analyseJarFile(String jarPathName);
+
+    /**
      * Gets the metrics in the format of a 2 dimensional array.
      * This is for updating the model of the summary dialog table.
      *

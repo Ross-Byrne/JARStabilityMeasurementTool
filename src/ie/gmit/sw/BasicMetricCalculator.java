@@ -17,15 +17,15 @@ public class BasicMetricCalculator implements MetricCalculatorable {
     private String jarPathName;
 
     /**
-     * Constructor for the class. Calculates stability for selected jar
+     * Calculates stability for selected jar
      *
-     * @param pathname
+     * @param jarPathName
      * The file path to a .jar file as a String.
      */
-    public BasicMetricCalculator(String pathname){
+    public void analyseJarFile(String jarPathName){
 
         // save the jar pathname
-        this.jarPathName = pathname;
+        this.jarPathName = jarPathName;
 
         // add the classes in jar to map
         addClassNamesToMap();
@@ -40,7 +40,7 @@ public class BasicMetricCalculator implements MetricCalculatorable {
 //            System.out.printf("\nOutdegree: %d. Indegree: %d. Stability: %.2f. Class: %s", m.getOutDegree(), m.getInDegree(), m.getStability(), m.getClassName());
 //        }
 
-    } // constructor
+    } // analyseJarFile()
 
     /**
      * Gets the metrics in the format of a 2 dimensional array.

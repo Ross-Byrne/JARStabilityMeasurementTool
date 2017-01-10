@@ -168,7 +168,8 @@ public class AppWindow {
                     if(group.isSelected(btnBetterAnalysis.getModel())) { // if better analysis is selected
 
                         // analyse JAR
-                        MetricCalculator metricCalculator = new MetricCalculator(txtFileName.getText());
+                        MetricCalculator metricCalculator = new MetricCalculator();
+                        metricCalculator.analyseJarFile(txtFileName.getText());
 
                         // create the summary
                         as = new AppSummary(frame, true);
@@ -182,7 +183,8 @@ public class AppWindow {
                     } else { // if basic analysis is selected
 
                         // analyse JAR
-                        BasicMetricCalculator metricCalculator = new BasicMetricCalculator(txtFileName.getText());
+                        BasicMetricCalculator metricCalculator = new BasicMetricCalculator();
+                        metricCalculator.analyseJarFile(txtFileName.getText());
 
                         // create the summary
                         as = new AppSummary(frame, true);
